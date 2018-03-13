@@ -1,0 +1,4 @@
+#!/bin/sh
+
+cd /home/jbi6/NYS_Project/RF
+Rscript rf_testing.R

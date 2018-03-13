@@ -1,0 +1,4 @@
+#!/bin/sh
+
+cd /home/jbi6/NYS_Project/NDVI
+Rscript ndvi.R $1

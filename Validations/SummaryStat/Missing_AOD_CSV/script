@@ -1,0 +1,8 @@
+#!/bin/sh
+#$ -N missing_aod_csv
+#$ -o /home/jbi6/log
+#$ -e /home/jbi6/log
+
+cd /home/jbi6/NYS_Project/Validations/SummaryStat/Missing_AOD_CSV
+matlab -nodesktop -nosplash -r missing_aod
+

@@ -1,0 +1,4 @@
+#!/bin/sh
+
+cd /home/jbi6/NYS_Project/Combine
+Rscript combine.R $1 $2 $3

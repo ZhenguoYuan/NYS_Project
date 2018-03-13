@@ -1,0 +1,9 @@
+#!/bin/sh
+#$ -N main_DEM
+#$ -q short.q
+#$ -o /home/jbi6/log
+#$ -e /home/jbi6/log
+
+cd /home/jbi6/NYS_Project/ASTER_GDEM
+Rscript main.R
+

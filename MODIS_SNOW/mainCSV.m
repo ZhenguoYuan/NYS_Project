@@ -16,6 +16,7 @@ p = parpool(12);
 path1 = '/home/jbi6/aura/MODIS_SNOW_ORI/MOD10C1/data/'; % Terra
 path2 = '/home/jbi6/aura/MODIS_SNOW_ORI/MYD10C1/data/'; % Aqua
 
+
 parfor year = 2002 : 2016
     
     exeMain(path1, year);

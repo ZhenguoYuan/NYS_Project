@@ -27,6 +27,7 @@ for (i in 1 : 300) { # How many days
     
     mi.result$year <- NULL
     mi.result$doy <- NULL
+
     mi.combine <- merge(combine, mi.result, by.x = 'ID', by.y = 'ID', all = T)
     
     # Gap-filling Tag
@@ -66,6 +67,7 @@ for (i in 1 : 300) { # How many days
     names(rf.result)[4] <- 'AOD550TAOT_RF'
     rf.result$Lat <- NULL
     rf.result$Lon <- NULL
+
     rf.combine <- merge(combine, rf.result, by.x = 'ID', by.y = 'ID', all = T)
     
     # Gap-filling Tag

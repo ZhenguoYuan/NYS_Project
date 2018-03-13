@@ -1,0 +1,4 @@
+#!/bin/sh
+
+cd /home/jbi6/NYS_Project/Modeling
+Rscript RF_Modeling.R $1

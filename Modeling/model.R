@@ -50,7 +50,7 @@ if (!file.exists(file.path(outpath, paste(year, '_COMBINE_RF.RData')))) {
       
       # Combining RF and combine
       dat.tmp <- merge(combine, rf.result, by.x = c('ID'), by.y = c('ID'), all = T)
-      
+
       # Removing missing AOD & PM2.5
       dat.tmp <- subset(dat.tmp, !is.na(AOD550_TAOT.y) & !is.na(PM25))
       

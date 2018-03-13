@@ -1,0 +1,8 @@
+#!/bin/sh
+#$ -N main_AOD_CSV
+#$ -o /home/jbi6/log
+#$ -e /home/jbi6/log
+
+cd /home/jbi6/NYS_Project/MAIAC_AOD
+matlab -nodesktop -nosplash -r main_AOD_CSV
+

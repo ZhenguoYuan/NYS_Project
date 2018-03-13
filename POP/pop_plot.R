@@ -1,4 +1,5 @@
 library(ggplot2)
+
 setwd('~/Google Drive/Projects/Codes/NYS_Project/POP/')
 
 source('../src/latlon.R')
@@ -8,7 +9,6 @@ sum(dat$pop)
 dat2 <- read.csv(file = '~/Downloads/lspop2012_ori.csv', stringsAsFactors = F, as.is = T)
 dat2 <- subset(dat2, lon >= min(lon.range) & lon <= max(lon.range) & lat >= min(lat.range) & lat <= max(lat.range))
 sum(dat2$pop)
-
 
 
 plot_new <- ggplot() + geom_tile(data = dat, aes(lon, lat, fill = pop, width = 0.014, height = 0.014), alpha = 1.0) + scale_fill_continuous(limits=c(0, 1000), oob = scales::squish)

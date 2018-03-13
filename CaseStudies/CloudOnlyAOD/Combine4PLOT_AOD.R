@@ -23,6 +23,7 @@ if (!file.exists(outpath)){
 }
 
 ## ---------- RF ---------- ##
+
 # AAOT550 cloud-only gapfilled
 aaot550.combine.cldonly <- aodCombine(year, day.range, inpath, 'aqua550', 'gapfilled')
 names(aaot550.combine.cldonly)[4] <- 'AAOT550_Mean'
@@ -45,6 +46,7 @@ if (!file.exists(outpath)){
 }
 
 ## ---------- RF ---------- ##
+
 # AAOT550 cloud+snow gapfilled
 aaot550.combine.cldsnw <- aodCombine(year, day.range, inpath, 'aqua550', 'gapfilled')
 names(aaot550.combine.cldsnw)[4] <- 'AAOT550_Mean'
