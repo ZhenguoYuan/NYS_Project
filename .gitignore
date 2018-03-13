@@ -1,0 +1,56 @@
+# History files
+.Rhistory
+.Rapp.history
+
+# Session Data files
+.RData
+
+# Example code in package build process
+*-Ex.R
+
+# Output files from R CMD build
+/*.tar.gz
+
+# Output files from R CMD check
+/*.Rcheck/
+
+# RStudio files
+.Rproj.user/
+
+# produced vignettes
+vignettes/*.html
+vignettes/*.pdf
+
+# OAuth2 token, see https://github.com/hadley/httr/releases/tag/v0.3
+.httr-oauth
+
+# knitr and R markdown default cache directories
+/*_cache/
+/cache/
+
+# Temporary files created by R markdown
+*.utf8.md
+*.knit.md
+
+# User files
+ASTER_GDEM/files/
+ASTER_GDEM/tmp/
+CaseStudies/CloudOnlyAOD/data/
+CaseStudies/SnowMax/data/
+CaseStudies/WildFire/data/
+Modeling/test/
+MODIS_SNOW/snow_testing/
+NLDAS/testdata/
+PM25/data/
+PM25/output/
+PM25/tmp/
+POP/img/
+RF/data/
+RF/testdata/
+RF/tmp/
+tmp/
+Validations/PLOT2D/data/
+Validations/PLOT2D/img/
+Validations/SummaryStat/Missing_AOD/data/
+Validations/SummaryStat/Missing_AOD/img/
+
