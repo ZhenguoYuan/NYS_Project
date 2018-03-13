@@ -1,0 +1,4 @@
+#!/bin/sh
+
+cd /home/jbi6/NYS_Project/Validations/PLOT2D
+Rscript Combine4PLOT_AOD.R

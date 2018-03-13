@@ -1,0 +1,4 @@
+#!/bin/sh
+
+cd /home/jbi6/NYS_Project/CaseStudies/CloudOnlyAOD
+Rscript rf_perform.R

@@ -1,0 +1,4 @@
+#!/bin/sh
+
+cd /home/jbi6/NYS_Project/Validations/PM25GROUND
+Rscript Combine4PM25.R

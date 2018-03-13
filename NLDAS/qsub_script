@@ -1,0 +1,4 @@
+#!/bin/sh
+
+cd /home/jbi6/NYS_Project/NLDAS
+Rscript nldas.R $1 $2 $3

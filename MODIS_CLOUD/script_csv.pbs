@@ -1,0 +1,8 @@
+#!/bin/sh
+#$ -N mainCSV
+#$ -o /home/jbi6/log
+#$ -e /home/jbi6/log
+
+cd /home/jbi6/NYS_Project/MODIS_CLOUD
+matlab -nodesktop -nosplash -r mainCSV
+

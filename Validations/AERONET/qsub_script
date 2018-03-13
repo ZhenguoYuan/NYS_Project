@@ -1,0 +1,4 @@
+#!/bin/sh
+
+cd /home/jbi6/NYS_Project/Validations/AERONET
+Rscript Combine4AERO.R

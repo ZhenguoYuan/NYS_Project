@@ -1,0 +1,4 @@
+#!/bin/sh
+
+cd /home/jbi6/NYS_Project/Validations/SummaryStat/Missing_AOD
+Rscript temporal_missing.R $1

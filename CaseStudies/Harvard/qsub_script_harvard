@@ -1,0 +1,4 @@
+#!/bin/sh
+
+cd /home/jbi6/NYS_Project/CaseStudies/Harvard
+Rscript harvard.R $1 $2 $3

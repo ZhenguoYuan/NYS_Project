@@ -1,0 +1,8 @@
+#!/bin/sh
+#$ -N READNC
+#$ -o /home/jbi6/log
+#$ -e /home/jbi6/log
+
+cd /home/jbi6/NYS_Project/POP
+matlab -nodesktop -nosplash -r readnc
+

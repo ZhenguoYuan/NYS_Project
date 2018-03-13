@@ -1,0 +1,4 @@
+#!/bin/sh
+
+cd /home/jbi6/NYS_Project/CaseStudies/Model_AOD
+Rscript Combine4PLOT_PM25.R $1

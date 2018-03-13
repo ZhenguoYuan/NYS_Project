@@ -1,0 +1,4 @@
+#!/bin/sh
+
+cd /home/jbi6/NYS_Project/MODIS_CLOUD
+Rscript modis.script.R $1 $2 $3
