@@ -88,8 +88,8 @@ combine4pm25 <- function (doys, year, inpath, suffix = '_PM25PRED_RF.csv',
   }
   
   ## ---------- Average ---------- ##
-  dat$PM25_Pred <- rowMeans(dat[(length(id.var) + length(cor.var) + 1) : ncol(dat)], na.rm = T)
-  pm25_combine_plot <- subset(dat, select = c(id.var, cor.var, pred.var))
+  dat$PM25_Pred_Avg <- rowMeans(dat[(length(id.var) + length(cor.var) + 1) : ncol(dat)], na.rm = T)
+  pm25_combine_plot <- subset(dat, select = c(id.var, cor.var, 'PM25_Pred_Avg'))
   
   return(pm25_combine_plot)
   
@@ -131,8 +131,8 @@ combine4pm25RData <- function (doys, year, inpath, suffix = '_HARVARD.RData',
   }
   
   ## ---------- Average ---------- ##
-  dat$PM25_Pred <- rowMeans(dat[(length(id.var) + length(cor.var) + 1) : ncol(dat)], na.rm = T)
-  pm25_combine_plot <- subset(dat, select = c(id.var, cor.var, pred.var))
+  dat$PM25_Pred_Avg <- rowMeans(dat[(length(id.var) + length(cor.var) + 1) : ncol(dat)], na.rm = T)
+  pm25_combine_plot <- subset(dat, select = c(id.var, cor.var, 'PM25_Pred_Avg'))
   
   return(pm25_combine_plot)
   

@@ -38,6 +38,8 @@ ASTER_GDEM/tmp/
 CaseStudies/CloudOnlyAOD/data/
 CaseStudies/SnowMax/data/
 CaseStudies/WildFire/data/
+CaseStudies/Model_AOD/data/
+CaseStudies/Harvard/data/
 Modeling/test/
 MODIS_SNOW/snow_testing/
 NLDAS/testdata/
