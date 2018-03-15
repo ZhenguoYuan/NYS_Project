@@ -17,20 +17,26 @@ year <- Args[6] # 6th argument is the first custom argument
 # DOY
 numdays <- numOfYear(as.numeric(year))
 
-combinePlot <- function(year, numdays, inpath, outpath) {
-  ## ---------- Combining ---------- ##
-  pm25_combine_plot <- combine4pm25(c(1 : numdays), year, inpath) # All year
-  pm25_combine_plot_spring <- combine4pm25(c(61 : 152), year, inpath) # Spring
-  pm25_combine_plot_summer <- combine4pm25(c(153 : 244), year, inpath) # Summer
-  pm25_combine_plot_fall <- combine4pm25(c(245 : 336), year, inpath) # Fall
-  pm25_combine_plot_winter <- combine4pm25(c(c(1 : 60), c(337 : numdays)), year, inpath) # Winter
+combinePlot <- function(year, start.date, end.date, inpath, outpath) {
   
-  ## ---------- Output ---------- ##
-  save(pm25_combine_plot, file = file.path(outpath, 'pm25_combine_plot.RData'))
-  save(pm25_combine_plot_spring, file = file.path(outpath, 'pm25_combine_plot_spring.RData'))
-  save(pm25_combine_plot_summer, file = file.path(outpath, 'pm25_combine_plot_summer.RData'))
-  save(pm25_combine_plot_fall, file = file.path(outpath, 'pm25_combine_plot_fall.RData'))
-  save(pm25_combine_plot_winter, file = file.path(outpath, 'pm25_combine_plot_winter.RData'))
+  
+  # ## ---------- Combining ---------- ##
+  # pm25_combine_plot <- combine4pm25(c(1 : numdays), year, inpath) # All year
+  # pm25_combine_plot_spring <- combine4pm25(c(61 : 152), year, inpath) # Spring
+  # pm25_combine_plot_summer <- combine4pm25(c(153 : 244), year, inpath) # Summer
+  # pm25_combine_plot_fall <- combine4pm25(c(245 : 336), year, inpath) # Fall
+  # pm25_combine_plot_winter <- combine4pm25(c(c(1 : 60), c(337 : numdays)), year, inpath) # Winter
+  # 
+  # ## ---------- Output ---------- ##
+  # save(pm25_combine_plot, file = file.path(outpath, 'pm25_combine_plot.RData'))
+  # save(pm25_combine_plot_spring, file = file.path(outpath, 'pm25_combine_plot_spring.RData'))
+  # save(pm25_combine_plot_summer, file = file.path(outpath, 'pm25_combine_plot_summer.RData'))
+  # save(pm25_combine_plot_fall, file = file.path(outpath, 'pm25_combine_plot_fall.RData'))
+  # save(pm25_combine_plot_winter, file = file.path(outpath, 'pm25_combine_plot_winter.RData'))
+  
+  pm25_combine_plot_snow <- combine4pm25(start.date : end.date, year, inpath)
+  save(pm25_combine_plot_snow, file = file.path(outpath, 'pm25_combine_plot_snow.RData'))
+  
 }
 
 
@@ -43,7 +49,7 @@ if (!file.exists(outpath)){
   dir.create(outpath, recursive = T)
 }
 
-combinePlot(year, numdays, inpath, outpath)
+combinePlot(year, start.date = 1, end.date = 105, inpath, outpath)
 
 ## ---------- Gapfilled AOD (Cloud + Snow) ---------- ##
 
@@ -54,7 +60,7 @@ if (!file.exists(outpath)){
   dir.create(outpath, recursive = T)
 }
 
-combinePlot(year, numdays, inpath, outpath)
+combinePlot(year, start.date = 1, end.date = 105, inpath, outpath)
 
 ## ---------- Cloud Only Gapfilled AOD ---------- ##
 
@@ -65,7 +71,7 @@ if (!file.exists(outpath)){
   dir.create(outpath, recursive = T)
 }
 
-combinePlot(year, numdays, inpath, outpath)
+combinePlot(year, start.date = 1, end.date = 105, inpath, outpath)
 
 
 
