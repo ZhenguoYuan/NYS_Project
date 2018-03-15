@@ -34,6 +34,11 @@ combinePlot <- function(year, start.date, end.date, inpath, outpath) {
   # save(pm25_combine_plot_fall, file = file.path(outpath, 'pm25_combine_plot_fall.RData'))
   # save(pm25_combine_plot_winter, file = file.path(outpath, 'pm25_combine_plot_winter.RData'))
   
+  # All year
+  pm25_combine_plot <- combine4pm25(c(1 : numdays), year, inpath) 
+  save(pm25_combine_plot, file = file.path(outpath, 'pm25_combine_plot.RData'))
+  
+  # Snow Season
   pm25_combine_plot_snow <- combine4pm25(start.date : end.date, year, inpath)
   save(pm25_combine_plot_snow, file = file.path(outpath, 'pm25_combine_plot_snow.RData'))
   

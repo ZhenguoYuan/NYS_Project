@@ -11,7 +11,6 @@ source('../../Validations/PLOT2D/src/plot_fun.R')
 
 year <- 2015
 
-
 ## ---------- Shp & Colorbar ---------- ##
 
 # Read shp
@@ -26,7 +25,7 @@ jet.colors <- colorRampPalette(c("#00007F", "blue", "#007FFF", "cyan", "#7FFF7F"
 
 # ---------- Full ---------- #
 
-# All year 
+# All Year
 load(paste('../../Validations/PLOT2D/data/PLOTPM25/2015/pm25_combine_plot.RData', sep = ''))
 pm25 <- pm25_combine_plot
 pm25 <- cutByShp(shp.name = shp.name, pm25)
@@ -39,9 +38,9 @@ gg_pm25 <- plot2d(data = pm25, fill = pm25$PM25_Pred,
 
 # ---------- Original ---------- #
 
-# All year 
-load(paste('data/Original/pm25_combine_plot.RData', sep = ''))
-pm25_ori <- pm25_combine_plot
+# Snow Season
+load(paste('data/Original/pm25_combine_plot_snow.RData', sep = ''))
+pm25_ori <- pm25_combine_plot_snow
 pm25_ori <- cutByShp(shp.name = shp.name, pm25_ori)
 
 gg_pm25_ori <- plot2d(data = pm25_ori, fill = pm25_ori$PM25_Pred_Avg, 
@@ -49,11 +48,11 @@ gg_pm25_ori <- plot2d(data = pm25_ori, fill = pm25_ori$PM25_Pred_Avg,
                       shp = myshp, legend_name = 'PM2.5', title = paste(as.character(year), 'PM2.5'), 
                       xlim = c(-80, -71.6), ylim = c(40.5, 45.25))
 
-# ---------- Gapfilled ---------- #
+# ---------- Gapfilled (Cloud+Snow) ---------- #
 
-# All year 
-load(paste('data/Gapfilled/pm25_combine_plot.RData', sep = ''))
-pm25_gap <- pm25_combine_plot
+# Snow Season
+load(paste('data/Gapfilled/pm25_combine_plot_snow.RData', sep = ''))
+pm25_gap <- pm25_combine_plot_snow
 pm25_gap <- cutByShp(shp.name = shp.name, pm25_gap)
 
 gg_pm25_gap <- plot2d(data = pm25_gap, fill = pm25_gap$PM25_Pred_Avg, 
@@ -63,9 +62,9 @@ gg_pm25_gap <- plot2d(data = pm25_gap, fill = pm25_gap$PM25_Pred_Avg,
 
 # ---------- Cloud Only ---------- #
 
-# All year 
-load(paste('data/CloudOnly/pm25_combine_plot.RData', sep = ''))
-pm25_cld <- pm25_combine_plot
+# Snow Season
+load(paste('data/CloudOnly/pm25_combine_plot_snow.RData', sep = ''))
+pm25_cld <- pm25_combine_plot_snow
 pm25_cld <- cutByShp(shp.name = shp.name, pm25_cld)
 
 gg_pm25_cld <- plot2d(data = pm25_cld, fill = pm25_cld$PM25_Pred_Avg, 
@@ -73,34 +72,28 @@ gg_pm25_cld <- plot2d(data = pm25_cld, fill = pm25_cld$PM25_Pred_Avg,
                       shp = myshp, legend_name = 'PM2.5', title = paste(as.character(year), 'PM2.5'),
                       xlim = c(-80, -71.6), ylim = c(40.5, 45.25))
 
-# ---------- Difference (Full - Original) ---------- #
-pm25.diff <- data.frame(Lat = pm25$Lat, Lon = pm25$Lon, diff = pm25$PM25_Pred - pm25_ori$PM25_Pred_Avg)
+# # ---------- Difference (Full - Original) ---------- #
+# pm25.diff <- data.frame(Lat = pm25$Lat, Lon = pm25$Lon, diff = pm25$PM25_Pred - pm25_ori$PM25_Pred_Avg)
+# 
+# diff.colors <- colorRampPalette(c('blue', 'white', 'red'), bias = 0.3)
+# gg.pm25.diff <- plot2d(data = pm25.diff, fill = pm25.diff$diff, 
+#                        colorbar = diff.colors, colorbar_limits = c(-2, 0.5),
+#                        shp = myshp, legend_name = 'PM2.5', title = paste(as.character(year), 'PM2.5 Diff'), 
+#                        xlim = c(-80, -71.6), ylim = c(40.5, 45.25))
+# 
+# # Stat
+# pm25.diff.stat <- pm25$PM25_Pred - pm25_ori$PM25_Pred_Avg
+# mean(pm25.diff.stat)
+# quantile(pm25.diff.stat, 0.25)
+# quantile(pm25.diff.stat, 0.75)
 
-diff.colors <- colorRampPalette(c('blue', 'white', 'red'), bias = 0.3)
-gg.pm25.diff <- plot2d(data = pm25.diff, fill = pm25.diff$diff, 
-                       colorbar = diff.colors, colorbar_limits = c(-2, 0.5),
-                       shp = myshp, legend_name = 'PM2.5', title = paste(as.character(year), 'PM2.5 Diff'), 
-                       xlim = c(-80, -71.6), ylim = c(40.5, 45.25))
+# ---------- Difference (Cloud+Snow - Cloud Only) ---------- #
 
-# Stat
-pm25.diff.stat <- pm25$PM25_Pred - pm25_ori$PM25_Pred_Avg
-mean(pm25.diff.stat)
-quantile(pm25.diff.stat, 0.25)
-quantile(pm25.diff.stat, 0.75)
-
-# ---------- Difference (Full - Gapfilled) ---------- #
-
-# Stat (Full - Gapfilled)
-pm25.diff.stat.gap <- pm25$PM25_Pred - pm25_gap$PM25_Pred_Avg
+# Stat (Cloud+Snow - Cloud Only)
+pm25.diff.stat.gap <- pm25_gap$PM25_Pred_Avg - pm25_cld$PM25_Pred_Avg
 mean(pm25.diff.stat.gap)
 quantile(pm25.diff.stat.gap, 0.25)
 quantile(pm25.diff.stat.gap, 0.75)
-
-# Stat (Full - CldOnly)
-pm25.diff.stat.cld <- pm25$PM25_Pred - pm25_cld$PM25_Pred_Avg
-mean(pm25.diff.stat.cld)
-quantile(pm25.diff.stat.cld, 0.25)
-quantile(pm25.diff.stat.cld, 0.75)
 
 # ---------- Population Weighted ---------- #
 
