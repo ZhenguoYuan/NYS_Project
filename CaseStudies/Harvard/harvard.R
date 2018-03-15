@@ -131,8 +131,6 @@ for (m in this.jobs) { # For a month
 }
 
 
-
-
 # # ----- Plot ----- #
 # shp.name <- '~/Google Drive/Projects/Codes/Public/shp/cb_2016_us_state_20m/cb_2016_us_state_20m.shp'
 # myshp <- readShapePoly(shp.name)

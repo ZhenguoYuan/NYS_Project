@@ -64,21 +64,6 @@ for (year in 2015 : 2015) {
   gg_pm25_winter
   ggsave(filename = file.path('img/columbia/', as.character(year), paste(as.character(year), 'WinterPM2.5', '.png', sep = '')), width = 30, height = 30, units = 'cm')
   
-  # ---------- PLOT PM2.5 with contours ---------- #
-  # Read DEM
-  # dem <- read.csv('data/DEM.csv', stringsAsFactors = F)
-  # # Resampling the DEM into a regular grid
-  # dem <- na.omit(dem)
-  # new.grid <- expand.grid(x = seq(min(dem$Lon), max(dem$Lon), 0.01), y = seq(min(dem$Lat), max(dem$Lat), 0.01))
-  # dem.reg <- idw.interp(xo = dem$Lon, yo = dem$Lat, zo = dem$DEM, xn = new.grid$x, yn = new.grid$y, nmax = 10, maxdist = 0.1)
-  # dem.reg <- na.omit(dem.reg)
-  load('data/dem.RData')
-  # Plot PM2.5 distribution with DEM
-  dem.color <- rev(brewer.pal(n = 9, name = "YlGnBu"))
-  gg.list <- plot2d.dem(data = pm25_combine_plot_winter,
-                       colorbar = dem.color, colorbar_limits = c(5.5, 8),
-                       shp = myshp, legend_name = 'PM2.5', title = paste(as.character(year), 'PM2.5 with DEM'), dem.reg,
-                       xlim = c(-75.5, -75.15), ylim = c(42.375, 42.75))
   
   
   # # ----------- Plot Combine ---------- #
