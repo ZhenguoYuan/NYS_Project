@@ -14,6 +14,7 @@ plot2d <- function (data, fill, colorbar, colorbar_limits = NULL, shp, legend_na
     scale_fill_gradientn(colours = colorbar(100), limits = colorbar_limits, oob = scales::squish) + # scales::squish is forcing all color display for points outside the legend range
     geom_polygon(data = shp, aes(x = long, y = lat, group = group), color = "black", fill = NA) +
     labs(fill = legend_name) + ggtitle(title) + coord_fixed(xlim = xlim, ylim = ylim, ratio = 1) # Using coord_fixed to realize the true zoom in!
+    # theme(legend.position = "bottom", legend.box = "horizontal", legend.key.width = unit(3, "line"))
   
   return(gg)
   

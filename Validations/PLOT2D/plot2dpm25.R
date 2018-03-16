@@ -16,6 +16,7 @@ for (year in 2015 : 2015) {
   
   # Read shp
   myshp <- readShapePoly('../../../Public/shp/cb_2016_us_state_20m/cb_2016_us_state_20m.shp')
+  myshp <- subset(myshp, NAME == 'New York') # Select NYS shp
   myshp <- fortify(myshp)
   
   # colorbar
@@ -34,35 +35,46 @@ for (year in 2015 : 2015) {
   load(paste('data/PLOTPM25/', as.character(year), '/pm25_combine_plot_fall.RData', sep = ''))
   load(paste('data/PLOTPM25/', as.character(year), '/pm25_combine_plot_winter.RData', sep = ''))
   
+  pm25_combine_plot <- cutByShp(shp.name = '../../../Public/shp/cb_2016_us_state_20m/cb_2016_us_state_20m.shp', pm25_combine_plot)
+  pm25_combine_plot_spring <- cutByShp(shp.name = '../../../Public/shp/cb_2016_us_state_20m/cb_2016_us_state_20m.shp', pm25_combine_plot_spring)
+  pm25_combine_plot_summer <- cutByShp(shp.name = '../../../Public/shp/cb_2016_us_state_20m/cb_2016_us_state_20m.shp', pm25_combine_plot_summer)
+  pm25_combine_plot_fall <- cutByShp(shp.name = '../../../Public/shp/cb_2016_us_state_20m/cb_2016_us_state_20m.shp', pm25_combine_plot_fall)
+  pm25_combine_plot_winter <- cutByShp(shp.name = '../../../Public/shp/cb_2016_us_state_20m/cb_2016_us_state_20m.shp', pm25_combine_plot_winter)
+  
   gg_pm25 <- plot2d(data = pm25_combine_plot, fill = pm25_combine_plot$PM25_Pred, 
                     colorbar = jet.colors, colorbar_limits = c(3, 12),
-                    shp = myshp, legend_name = 'PM2.5', title = paste(as.character(year), 'PM2.5'))
+                    shp = myshp, legend_name = 'PM2.5', title = paste(as.character(year), 'PM2.5'),
+                    xlim = c(-80, -71.6), ylim = c(40.5, 45.25))
   gg_pm25
-  ggsave(filename = file.path('img/columbia/', as.character(year), paste(as.character(year), 'PM2.5', '.png', sep = '')), width = 30, height = 30, units = 'cm')
+  #ggsave(filename = file.path('img/columbia/', as.character(year), paste(as.character(year), 'PM2.5', '.png', sep = '')), width = 30, height = 30, units = 'cm')
   
   gg_pm25_spring <- plot2d(data = pm25_combine_plot_spring, fill = pm25_combine_plot_spring$PM25_Pred,
                            colorbar = jet.colors, colorbar_limits = c(3, 12),
-                           shp = myshp, legend_name = 'PM2.5', title = paste(as.character(year), 'SpringPM2.5'))
+                           shp = myshp, legend_name = 'PM2.5', title = paste(as.character(year), 'Spring PM2.5'),
+                           xlim = c(-80, -71.6), ylim = c(40.5, 45.25))
   gg_pm25_spring
-  ggsave(filename = file.path('img/columbia/', as.character(year), paste(as.character(year), 'Spring PM2.5', '.png', sep = '')), width = 30, height = 30, units = 'cm')
+  #ggsave(filename = file.path('img/columbia/', as.character(year), paste(as.character(year), 'Spring PM2.5', '.png', sep = '')), width = 30, height = 30, units = 'cm')
   
   gg_pm25_summer <- plot2d(data = pm25_combine_plot_summer, fill = pm25_combine_plot_summer$PM25_Pred,
                            colorbar = jet.colors, colorbar_limits = c(3, 12),
-                           shp = myshp, legend_name = 'PM2.5', title = paste(as.character(year), 'Summer PM2.5'))
+                           shp = myshp, legend_name = 'PM2.5', title = paste(as.character(year), 'Summer PM2.5'),
+                           xlim = c(-80, -71.6), ylim = c(40.5, 45.25))
   gg_pm25_summer
-  ggsave(filename = file.path('img/columbia/', as.character(year), paste(as.character(year), 'SummerPM2.5', '.png', sep = '')), width = 30, height = 30, units = 'cm')
+  #ggsave(filename = file.path('img/columbia/', as.character(year), paste(as.character(year), 'SummerPM2.5', '.png', sep = '')), width = 30, height = 30, units = 'cm')
   
   gg_pm25_fall <- plot2d(data = pm25_combine_plot_fall, fill = pm25_combine_plot_fall$PM25_Pred,
                          colorbar = jet.colors, colorbar_limits = c(3, 12),
-                         shp = myshp, legend_name = 'PM2.5', title = paste(as.character(year), 'Fall PM2.5'))
+                         shp = myshp, legend_name = 'PM2.5', title = paste(as.character(year), 'Fall PM2.5'),
+                         xlim = c(-80, -71.6), ylim = c(40.5, 45.25))
   gg_pm25_fall
-  ggsave(filename = file.path('img/columbia/', as.character(year), paste(as.character(year), 'FallPM2.5', '.png', sep = '')), width = 30, height = 30, units = 'cm')
+  #ggsave(filename = file.path('img/columbia/', as.character(year), paste(as.character(year), 'FallPM2.5', '.png', sep = '')), width = 30, height = 30, units = 'cm')
   
   gg_pm25_winter <- plot2d(data = pm25_combine_plot_winter, fill = pm25_combine_plot_winter$PM25_Pred,
-                           colorbar = jet.colors, colorbar_limits = c(4, 17),
-                           shp = myshp, legend_name = 'PM2.5', title = paste(as.character(year), 'Winter PM2.5'))
+                           colorbar = jet.colors, colorbar_limits = c(3, 12),
+                           shp = myshp, legend_name = 'PM2.5', title = paste(as.character(year), 'Winter PM2.5'),
+                           xlim = c(-80, -71.6), ylim = c(40.5, 45.25))
   gg_pm25_winter
-  ggsave(filename = file.path('img/columbia/', as.character(year), paste(as.character(year), 'WinterPM2.5', '.png', sep = '')), width = 30, height = 30, units = 'cm')
+  #ggsave(filename = file.path('img/columbia/', as.character(year), paste(as.character(year), 'WinterPM2.5', '.png', sep = '')), width = 30, height = 30, units = 'cm')
   
   
   

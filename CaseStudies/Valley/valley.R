@@ -2,6 +2,9 @@ setwd('~/Google Drive/Projects/Codes/NYS_Project/CaseStudies/Valley/')
 source('../../src/fun.R')
 source('../../Validations/PLOT2D/src/plot_fun.R')
 
+library(RColorBrewer)
+library(ggmap)
+
 ## ---------- Data ---------- ##
 
 year <- 2015
@@ -69,12 +72,39 @@ gg.list$gg
 # Google map with contours
 gg.list$gg.map
 
+# ---------- PLOT Population Density ---------- #
+
+## --- LandScan --- ##
 # Plot population density
 pop <- read.csv('../../CaseStudies/Model_AOD/data/lspop2015.csv')
 pop <- cutByShp(shp.name = '../../../Public/shp/cb_2016_us_state_20m/cb_2016_us_state_20m.shp', pop)
-gg.pop <- plot2d(data = pop, fill = pop$pop, colorbar = jet.colors, colorbar_limits = c(0, 100), shp = myshp, legend_name = 'POP', title = 'POP', xlim = c(-75.5, -75.15), ylim = c(42.375, 42.75))
+gg.pop <- plot2d(data = pop, fill = pop$pop, colorbar = jet.colors, colorbar_limits = c(0, 100), 
+                 shp = myshp, legend_name = 'POP', title = 'POP', xlim = c(-75.5, -75.15), ylim = c(42.375, 42.75))
 gg.pop + geom_contour(data = dem.reg, aes(x = x, y = y, z = var1.pred), binwidth = 140, colour = 'white')
 
 # Mean pop density
 pop.sub <- subset(pop, lat >= 42.375 & lat <= 42.75 & lon >= -75.5 & lon <= -75.15)
 mean(pop.sub$pop, na.rm = T)
+
+## --- Census --- ##
+## Save the shapefile as a RData
+#pop.cen <- readShapePoly('~/Downloads/pop-census/PopCen_plgon_land_albers_pop.shp')
+#pop.cen <- subset(pop.cen, LATITUDE >= 42 & LATITUDE <= 43 & LONGITUDE >= -76 & LONGITUDE <= -75)
+#save(pop.cen, file = 'census.RData')
+load('data/census.RData')
+# Read the shape file
+proj <- '+proj=aea +lat_1=29.5 +lat_2=45.5 +lat_0=37.5 +lon_0=-96 +x_0=0 +y_0=0 +ellps=GRS80 +datum=NAD83 +units=m +no_defs' # NAD83 projection
+pop.cen@proj4string <- CRS(proj)
+pop.cen <- spTransform(pop.cen, "+proj=longlat +datum=WGS84 +no_defs +ellps=WGS84 +towgs84=0,0,0") # WGS84 projection
+pop.cen.df <- fortify(pop.cen) # Convert to data frame
+# Read the data
+pop.cen.dat <- pop.cen@data
+pop.cen.dat$id <- rownames(pop.cen.dat)
+# Merge the shapefile and the data set
+pop.cen.df.new <- merge(pop.cen.df, pop.cen.dat, by = c('id'), all = T)
+
+ggplot() + geom_polygon(data = pop.cen.df.new, aes(x = long, y = lat, group = group, fill = POPULATION), color = "black") + 
+  coord_fixed(xlim = c(-75.5, -75.15),  ylim = c(42.375, 42.75), ratio = 1) +
+  geom_contour(data = dem.reg, aes(x = x, y = y, z = var1.pred), binwidth = 140, colour = 'white') + # DEM contour
+  labs(fill = 'POP') + ggtitle('Census Bureau 2010')
+
