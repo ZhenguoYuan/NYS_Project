@@ -1,5 +1,3 @@
-library(ggplot2)
-library(ggmap)
 library(viridis)
 library(RColorBrewer)
 library(maptools)
