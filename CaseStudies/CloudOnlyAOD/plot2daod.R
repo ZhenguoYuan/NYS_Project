@@ -84,6 +84,16 @@ gg.taot.diff <- plot2d(data = df.taot.diff, fill = df.taot.diff$Diff,
                        shp = myshp, legend_name = 'AOD', title = '2015 001-112 TERRA AOD (CldSnw - CldOnly)',
                        xlim = c(-80, -71.6), ylim = c(40.5, 45.25))
 
+## Difference (CldSnw - CldOnly) AAOT
+mean(aaot550.combine.cldsnw$AAOT550_Mean - aaot550.combine.cldonly$AAOT550_Mean, na.rm = T)
+quantile(aaot550.combine.cldsnw$AAOT550_Mean - aaot550.combine.cldonly$AAOT550_Mean, 0.25, na.rm = T)
+quantile(aaot550.combine.cldsnw$AAOT550_Mean - aaot550.combine.cldonly$AAOT550_Mean, 0.75, na.rm = T)
+
+## Difference (CldSnw - CldOnly) TAOT
+mean(taot550.combine.cldsnw$TAOT550_Mean - taot550.combine.cldonly$TAOT550_Mean, na.rm = T)
+quantile(taot550.combine.cldsnw$TAOT550_Mean - taot550.combine.cldonly$TAOT550_Mean, 0.25, na.rm = T)
+quantile(taot550.combine.cldsnw$TAOT550_Mean - taot550.combine.cldonly$TAOT550_Mean, 0.75, na.rm = T)
+
 ## ---------- Summary Stats & T-Test ---------- ##
 mean(aaot550.combine.cldonly$AAOT550_Mean, na.rm = T)
 quantile(aaot550.combine.cldonly$AAOT550_Mean, 0.25, na.rm = T)
