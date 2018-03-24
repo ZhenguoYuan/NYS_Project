@@ -46,6 +46,10 @@ for (year in 2015 : 2015) {
   gg_pm25
   #ggsave(filename = file.path('img/columbia/', as.character(year), paste(as.character(year), 'PM2.5', '.png', sep = '')), width = 30, height = 30, units = 'cm')
   
+  mean(pm25_combine_plot$PM25_Pred)
+  quantile(pm25_combine_plot$PM25_Pred, 0.25)
+  quantile(pm25_combine_plot$PM25_Pred, 0.75)
+  
   gg_pm25_spring <- plot2d(data = pm25_combine_plot_spring, fill = pm25_combine_plot_spring$PM25_Pred,
                            colorbar = jet.colors, colorbar_limits = c(3, 12),
                            shp = myshp, legend_name = 'PM2.5', title = paste(as.character(year), 'Spring PM2.5'),

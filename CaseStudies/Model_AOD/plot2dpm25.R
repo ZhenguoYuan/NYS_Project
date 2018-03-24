@@ -24,7 +24,7 @@ jet.colors <- colorRampPalette(c("#00007F", "blue", "#007FFF", "cyan", "#7FFF7F"
 diff.colors.nobias <- colorRampPalette(c('blue', 'white', 'red'))
 diff.colors.bias <- colorRampPalette(c('blue', 'white', 'red'), bias = 0.3)
 
-# ---------- Full ---------- #
+# ---------- Full (All Year) ---------- #
 
 # All Year
 load(paste('../../Validations/PLOT2D/data/PLOTPM25/2015/pm25_combine_plot.RData', sep = ''))
@@ -36,8 +36,37 @@ gg.pm25 <- plot2d(data = pm25, fill = pm25$PM25_Pred,
                   shp = myshp, legend_name = 'PM2.5', title = paste(as.character(year), 'PM2.5'), 
                   xlim = c(-80, -71.6), ylim = c(40.5, 45.25))
 
+# ---------- Original (All Year) ---------- #
 
-# ---------- Original ---------- #
+load(paste('data/Original/pm25_combine_plot.RData', sep = ''))
+pm25.ori <- pm25_combine_plot
+pm25.ori <- cutByShp(shp.name = shp.name, pm25.ori)
+
+gg.pm25.ori <- plot2d(data = pm25.ori, fill = pm25.ori$PM25_Pred_Avg, 
+                           colorbar = jet.colors, colorbar_limits = c(3, 12),
+                           shp = myshp, legend_name = 'PM2.5', title = paste(as.character(year), 'PM2.5 All Year Original AOD'), 
+                           xlim = c(-80, -71.6), ylim = c(40.5, 45.25))
+
+# ---------- Difference (Full - Original) ---------- #
+pm25.diff <- data.frame(Lat = pm25$Lat, Lon = pm25$Lon, diff = pm25$PM25_Pred - pm25.ori$PM25_Pred)
+
+gg.pm25.diff <- plot2d(data = pm25.diff, fill = pm25.diff$diff,
+                       colorbar = diff.colors.bias, colorbar_limits = c(-2, 0.5),
+                       shp = myshp, legend_name = 'PM2.5', title = paste(as.character(year), 'PM2.5 Diff'),
+                       xlim = c(-80, -71.6), ylim = c(40.5, 45.25))
+
+# Stat
+pm25.diff.stat <- pm25$PM25_Pred - pm25.ori$PM25_Pred
+mean(pm25.diff.stat, na.rm = T)
+quantile(pm25.diff.stat, 0.25, na.rm = T)
+quantile(pm25.diff.stat, 0.75, na.rm = T)
+max(abs(pm25.diff.stat))
+
+# Paired T-Test
+t.test(pm25$PM25_Pred, pm25.ori$PM25_Pred, paired = T)
+
+
+# ---------- Original (Snow Season) ---------- #
 
 # Snow Season
 load(paste('data/Original/pm25_combine_plot_snow.RData', sep = ''))
@@ -49,7 +78,7 @@ gg.pm25.ori.snow <- plot2d(data = pm25.ori.snow, fill = pm25.ori.snow$PM25_Pred_
                       shp = myshp, legend_name = 'PM2.5', title = paste(as.character(year), 'PM2.5 Snow Season'), 
                       xlim = c(-80, -71.6), ylim = c(40.5, 45.25))
 
-# ---------- Gapfilled (Cloud+Snow) ---------- #
+# ---------- Gapfilled (Cloud+Snow) (Snow Season) ---------- #
 
 # Snow Season
 load(paste('data/Gapfilled/pm25_combine_plot_snow.RData', sep = ''))
@@ -61,7 +90,7 @@ gg.pm25.gap.snow <- plot2d(data = pm25.gap.snow, fill = pm25.gap.snow$PM25_Pred_
                       shp = myshp, legend_name = 'PM2.5', title = paste(as.character(year), 'PM2.5 Snow Season'), 
                       xlim = c(-80, -71.6), ylim = c(40.5, 45.25))
 
-# ---------- Cloud Only ---------- #
+# ---------- Cloud Only (Snow Season) ---------- #
 
 # Snow Season
 load(paste('data/CloudOnly/pm25_combine_plot_snow.RData', sep = ''))
@@ -73,21 +102,7 @@ gg.pm25.cld.snow <- plot2d(data = pm25.cld.snow, fill = pm25.cld.snow$PM25_Pred_
                       shp = myshp, legend_name = 'PM2.5', title = paste(as.character(year), 'PM2.5 Snow Season'),
                       xlim = c(-80, -71.6), ylim = c(40.5, 45.25))
 
-# # ---------- Difference (Full - Original) ---------- #
-# pm25.diff <- data.frame(Lat = pm25$Lat, Lon = pm25$Lon, diff = pm25$PM25_Pred - pm25_ori$PM25_Pred_Avg)
-# 
-# gg.pm25.diff <- plot2d(data = pm25.diff, fill = pm25.diff$diff, 
-#                        colorbar = diff.colors, colorbar_limits = c(-2, 0.5),
-#                        shp = myshp, legend_name = 'PM2.5', title = paste(as.character(year), 'PM2.5 Diff'), 
-#                        xlim = c(-80, -71.6), ylim = c(40.5, 45.25))
-# 
-# # Stat
-# pm25.diff.stat <- pm25$PM25_Pred - pm25_ori$PM25_Pred_Avg
-# mean(pm25.diff.stat)
-# quantile(pm25.diff.stat, 0.25)
-# quantile(pm25.diff.stat, 0.75)
-
-# ---------- Difference (Cloud+Snow - Cloud Only) ---------- #
+# ---------- Difference (Cloud+Snow - Cloud Only) (Snow Season) ---------- #
 
 # Stat (Cloud+Snow - Cloud Only)
 pm25.diff.snow <- data.frame(Lat = pm25.gap.snow$Lat, Lon = pm25.gap.snow$Lon, diff = pm25.gap.snow$PM25_Pred_Avg - pm25.cld.snow$PM25_Pred_Avg)
