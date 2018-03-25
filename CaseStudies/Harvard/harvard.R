@@ -106,7 +106,7 @@ bufferMean <- function(df.row, dat, buffer) {
   ### dat - the data including original MAIAC AOD
   
   # Sampling the data
-  idx <- sample(1 : nrow(dat), 0.5*nrow(dat))
+  idx <- sample(1 : nrow(dat), 0.1*nrow(dat))
   dat.reduced <- dat[idx, ]
   # X and Y
   x.tmp <- df.row['X_Lon']
