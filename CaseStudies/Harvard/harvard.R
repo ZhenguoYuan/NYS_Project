@@ -31,9 +31,12 @@ this.jobs <- jobs[[cluster.idx]]
 # ----- Parallel ----- #
 # -------------------- #
 
+# ----- Parameters -----
+# 12 Months
 month.start <- c(1, 32, 60, 91, 121, 152, 182, 213, 244, 274, 305, 335)
 month.end <- c(31, 59, 90, 120, 151, 181, 212, 243, 273, 304, 334, 365)
 
+# Paths
 inpath <- file.path('/home/jbi6/terra/MAIAC_GRID_OUTPUT/Modeling/PM25_PRED_RFMODEL', as.character(year))
 inpath.rf.aaot <- paste('/home/jbi6/terra/MAIAC_GRID_OUTPUT/RF/', as.character(year), '/aqua550/', sep = '')
 inpath.rf.taot <- paste('/home/jbi6/terra/MAIAC_GRID_OUTPUT/RF/', as.character(year), '/terra550/', sep = '')
@@ -45,6 +48,9 @@ outpath.pred <- file.path('/home/jbi6/terra/MAIAC_GRID_OUTPUT/CaseStudies/Harvar
 if (!file.exists(outpath.pred)) {
   dir.create(outpath.pred,recursive = T)
 }
+
+# Buffer
+buffer <- 100 # in km
 
 #------------------------#
 ## Cross-validation of Harvard Gap-filling
@@ -131,9 +137,15 @@ for (m in this.jobs) { # For a month
       dat.daily$doy <- i.doy
       
       # Daily Mean
-      DailyMean <- mean(dat.daily[dat.daily$gapfill.tag == F, ]$PM25_Pred, na.rm = T) # Using non-gapfilling data to calculate daily mean
-      dat.daily$DailyMean <- DailyMean
-      dat.daily$sqrtDailyMean <- sqrt(DailyMean)
+      for (i.mean in 1 : nrow(dat.daily)){
+        x.tmp <- dat.daily[i.mean]$X_Lon
+        y.tmp <- dat.daily[i.mean]$Y_Lat
+        dat.daily.temp <- subset(dat.daily, sqrt((X_Lon - x.tmp)^2 + (Y_Lat - y.tmp)^2) <= buffer) # Select the PM2.5 sites with buffer
+        DailyMean.tmp <- mean(dat.daily.temp[dat.daily$gapfill.tag == F, ]$PM25_Pred, na.rm = T) # Using non-gapfilling data to calculate daily mean
+        dat.daily[i.mean]$DailyMean <- DailyMean.tmp
+        dat.daily[i.mean]$sqrtDailyMean <- sqrt(DailyMean.tmp)
+      }
+      
       # Sqrt PM2.5
       dat.daily$sqrtPM25_Pred <- sqrt(dat.daily$PM25_Pred)
       
