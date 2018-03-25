@@ -42,6 +42,55 @@ if (!file.exists(outpath)) {
   dir.create(outpath,recursive = T)
 }
 
+#------------------------#
+## Cross-validation of Harvard Gap-filling
+harvardCV <- function(all, fold = 10, times = 1) {
+  # fold: how many parts the data are divided into, in which one of this parts is used for testing, and the remaining are used for training
+  # times: how many times the CV should run
+  
+  print('============== CV Started ==============')
+  
+  cv.r2 <- c()
+  for (i_cv in 1 : times) {
+    
+    ## ----- Split ----- ##
+    
+    # Randonly reorder the sequence
+    idx <- 1 : nrow(all)
+    idx <- sample(idx, size = length(idx), replace = F)
+    # Splitting the dataset by the number of fold
+    groups <- split(1 : length(idx), 1 : fold)
+    
+    # For each fold
+    for (i.fold in 1 : fold) {
+      
+      # ----- Allocation ----- #
+      dat.fit.train <- all[-unlist(groups[i.fold]), ]
+      dat.fit.test <- all[unlist(groups[i.fold]), ]
+      
+      y <- dat.fit.test$sqrtPM25_Pred
+      dat.fit.test$sqrtPM25_Pred <- NULL
+      
+      ## ----- CV ----- ##
+      harvmod <- gam(sqrtPM25_Pred ~ sqrtDailyMean + s(X_Lon, Y_Lat, k = 10), data = dat.fit.train)
+      sqrtPred <- predict(harvmod, dat.fit.test)
+      y.pred <- sqrtPred * sqrtPred
+      cv.r2[i.fold + fold * (i_cv - 1)] <- cor(y, y.pred) * cor(y, y.pred)
+      
+      print(paste('CV R2 ', as.character(i_cv), '_',as.character(i.fold), ': ', as.character(cv.r2[i.fold + fold * (i_cv - 1)]), sep = ''))
+      
+      gc()
+      
+    }
+    
+  }
+  
+  print(paste('Mean CV R2:', as.character(mean(cv.r2))))
+  print('============== CV Completed ==============')
+  
+}
+#------------------------#
+
 for (m in this.jobs) { # For a month
   
   dat.monthly.fit <- data.frame()
@@ -116,6 +165,14 @@ for (m in this.jobs) { # For a month
   # Combining fit and pred data sets
   dat.monthly <- rbind(dat.monthly.fit, dat.monthly.pred)
   dat.monthly <- dat.monthly[order(dat.monthly$ID),]
+  
+  # --- Cross-validation --- #
+  # Output screen contents to file
+  sink(file = file.path(outpath, paste(as.character(year), sprintf('%02d', m), 'HarvardModel.txt', sep = '_')))
+  # Cross-validation
+  harvardCV(dat.monthly.fit)
+  # End the screen output
+  sink()
   
   # --- Save Predicted Data --- #
   
