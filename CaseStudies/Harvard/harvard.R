@@ -104,15 +104,11 @@ harvardCV <- function(all, fold = 10, times = 1) {
 bufferMean <- function(df.row, dat, buffer) {
   ### df.row - a row of the input data frame
   ### dat - the data including original MAIAC AOD
-  
-  # Sampling the data
-  idx <- sample(1 : nrow(dat), 0.1*nrow(dat))
-  dat.reduced <- dat[idx, ]
   # X and Y
   x.tmp <- df.row['X_Lon']
   y.tmp <- df.row['Y_Lat']
   # Mean calculation
-  dat.tmp <- subset(dat.reduced, sqrt((X_Lon - x.tmp)^2 + (Y_Lat - y.tmp)^2) <= buffer)
+  dat.tmp <- subset(dat, sqrt((X_Lon - x.tmp)^2 + (Y_Lat - y.tmp)^2) <= buffer)
   DailyMean.tmp <- mean(dat.tmp$PM25_Pred, na.rm = T) # Using non-gapfilling data to calculate daily mean
   
   return(DailyMean.tmp)
@@ -170,9 +166,20 @@ for (m in this.jobs) { # For a month
       # }
       dat.daily.original <- subset(dat.daily, gapfill.tag == F) # Select the PM2.5 values predicted by original AOD
       print(paste('nrow :', as.character(nrow(dat.daily.original))))
-      DailyMean <- apply(dat.daily, 1, FUN = bufferMean, dat.daily.original, buffer)
-      dat.daily$DailyMean <- DailyMean
-      dat.daily$sqrtDailyMean <- sqrt(DailyMean)
+      if (nrow(dat.daily.original != 0)) {
+        # Sampling the data
+        if (nrow(dat.daily.original) > 10000){
+          idx <- sample(1 : nrow(dat.daily.original), 10000)
+          dat.daily.original <- dat.daily.original[idx, ]
+        }
+        DailyMean <- apply(dat.daily, 1, FUN = bufferMean, dat.daily.original, buffer)
+        dat.daily$DailyMean <- DailyMean
+        dat.daily$sqrtDailyMean <- sqrt(DailyMean)
+      } else {
+        dat.daily$DailyMean <- NA
+        dat.daily$sqrtDailyMean <- NA
+      }
+
       
       # Sqrt PM2.5
       dat.daily$sqrtPM25_Pred <- sqrt(dat.daily$PM25_Pred)
