@@ -169,6 +169,7 @@ for (m in this.jobs) { # For a month
       #   dat.daily$sqrtDailyMean[i.mean] <- sqrt(DailyMean.tmp)
       # }
       dat.daily.original <- subset(dat.daily, gapfill.tag == F) # Select the PM2.5 values predicted by original AOD
+      print(paste('nrow :', as.character(nrow(dat.daily.original))))
       DailyMean <- apply(dat.daily, 1, FUN = bufferMean, dat.daily.original, buffer)
       dat.daily$DailyMean <- DailyMean
       dat.daily$sqrtDailyMean <- sqrt(DailyMean)
