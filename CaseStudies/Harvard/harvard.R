@@ -102,8 +102,8 @@ harvardCV <- function(all, fold = 10, times = 1) {
 #------------------------#
 # Calculate each row's buffer mean
 bufferMean <- function(df.row, dat, buffer) {
-  x.tmp <- df.row$X_Lon
-  y.tmp <- df.row$Y_Lat
+  x.tmp <- df.row['X_Lon']
+  y.tmp <- df.row['Y_Lat']
   DailyMean.tmp <- mean(dat[dat$gapfill.tag == F & sqrt((dat$X_Lon - x.tmp)^2 + (dat$Y_Lat - y.tmp)^2) <= buffer, ]$PM25_Pred, 
                         na.rm = T) # Using non-gapfilling data to calculate daily mean
   
@@ -160,7 +160,7 @@ for (m in this.jobs) { # For a month
       #   dat.daily$DailyMean[i.mean] <- DailyMean.tmp
       #   dat.daily$sqrtDailyMean[i.mean] <- sqrt(DailyMean.tmp)
       # }
-      DailyMean <- apply(dat.daily, 2, FUN = bufferMean, dat.daily, buffer)
+      DailyMean <- apply(dat.daily, 1, FUN = bufferMean, dat.daily, buffer)
       dat.daily$DailyMean <- DailyMean
       dat.daily$sqrtDailyMean <- sqrt(DailyMean)
       
