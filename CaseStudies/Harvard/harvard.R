@@ -136,6 +136,10 @@ for (m in this.jobs) { # For a month
       dat.daily$month <- m
       dat.daily$doy <- i.doy
       
+      # Lat/Lon to KM
+      xy <- xy.latlon(Lat = dat.daily$Lat, Long = dat.daily$Lon)
+      dat.daily <- cbind(dat.daily, xy)
+      
       # Daily Mean
       for (i.mean in 1 : nrow(dat.daily)){
         x.tmp <- dat.daily[i.mean]$X_Lon
@@ -148,10 +152,6 @@ for (m in this.jobs) { # For a month
       
       # Sqrt PM2.5
       dat.daily$sqrtPM25_Pred <- sqrt(dat.daily$PM25_Pred)
-      
-      # Lat/Lon to KM
-      xy <- xy.latlon(Lat = dat.daily$Lat, Long = dat.daily$Lon)
-      dat.daily <- cbind(dat.daily, xy)
       
       # Fitting and predicting data sets
       dat.daily.fit <- dat.daily[dat.daily$gapfill.tag == F, ]
