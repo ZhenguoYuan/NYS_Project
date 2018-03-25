@@ -37,9 +37,13 @@ month.end <- c(31, 59, 90, 120, 151, 181, 212, 243, 273, 304, 334, 365)
 inpath <- file.path('/home/jbi6/terra/MAIAC_GRID_OUTPUT/Modeling/PM25_PRED_RFMODEL', as.character(year))
 inpath.rf.aaot <- paste('/home/jbi6/terra/MAIAC_GRID_OUTPUT/RF/', as.character(year), '/aqua550/', sep = '')
 inpath.rf.taot <- paste('/home/jbi6/terra/MAIAC_GRID_OUTPUT/RF/', as.character(year), '/terra550/', sep = '')
-outpath <- file.path('/home/jbi6/terra/MAIAC_GRID_OUTPUT/CaseStudies/Harvard/PM25_PRED_HARVARD', as.character(year))
-if (!file.exists(outpath)) {
-  dir.create(outpath,recursive = T)
+outpath.fit <- file.path('/home/jbi6/terra/MAIAC_GRID_OUTPUT/CaseStudies/Harvard/PM25_FIT_HARVARD', as.character(year))
+if (!file.exists(outpath.fit)) {
+  dir.create(outpath.fit,recursive = T)
+}
+outpath.pred <- file.path('/home/jbi6/terra/MAIAC_GRID_OUTPUT/CaseStudies/Harvard/PM25_PRED_HARVARD', as.character(year))
+if (!file.exists(outpath.pred)) {
+  dir.create(outpath.pred,recursive = T)
 }
 
 #------------------------#
@@ -168,7 +172,7 @@ for (m in this.jobs) { # For a month
   
   # --- Cross-validation --- #
   # Output screen contents to file
-  sink(file = file.path(outpath, paste(as.character(year), sprintf('%02d', m), 'HarvardModel.txt', sep = '_')))
+  sink(file = file.path(outpath.fit, paste(as.character(year), sprintf('%02d', m), 'HarvardModel.txt', sep = '_')))
   # Cross-validation
   harvardCV(dat.monthly.fit)
   # End the screen output
@@ -180,7 +184,7 @@ for (m in this.jobs) { # For a month
     
     dat.daily.harvard <- subset(dat.monthly, month == m & doy == i.doy)
     if (nrow(dat.daily.harvard) > 0) {
-      save(dat.daily.harvard, file = file.path(outpath, paste(as.character(year), sprintf('%03d', i.doy), '_HARVARD.RData', sep = '')))
+      save(dat.daily.harvard, file = file.path(outpath.pred, paste(as.character(year), sprintf('%03d', i.doy), '_HARVARD.RData', sep = '')))
     }
   }
   
