@@ -142,6 +142,7 @@ for (m in this.jobs) { # For a month
       
       # Daily Mean
       for (i.mean in 1 : nrow(dat.daily)){
+        print(paste(as.character(i.doy), as.character(i.mean)))
         x.tmp <- dat.daily$X_Lon[i.mean]
         y.tmp <- dat.daily$Y_Lat[i.mean]
         DailyMean.tmp <- mean(dat.daily[dat.daily$gapfill.tag == F & sqrt((dat.daily$X_Lon - x.tmp)^2 + (dat.daily$Y_Lat - y.tmp)^2) <= buffer, ]$PM25_Pred, 
