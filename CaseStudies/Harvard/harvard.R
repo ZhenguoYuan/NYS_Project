@@ -144,8 +144,8 @@ for (m in this.jobs) { # For a month
       for (i.mean in 1 : nrow(dat.daily)){
         x.tmp <- dat.daily$X_Lon[i.mean]
         y.tmp <- dat.daily$Y_Lat[i.mean]
-        dat.daily.temp <- subset(dat.daily, sqrt((X_Lon - x.tmp)^2 + (Y_Lat - y.tmp)^2) <= buffer) # Select the PM2.5 sites with buffer
-        DailyMean.tmp <- mean(dat.daily.temp[dat.daily.temp$gapfill.tag == F, ]$PM25_Pred, na.rm = T) # Using non-gapfilling data to calculate daily mean
+        DailyMean.tmp <- mean(dat.daily[dat.daily$gapfill.tag == F & sqrt((dat.daily$X_Lon - x.tmp)^2 + (dat.daily$Y_Lat - y.tmp)^2) <= buffer, ]$PM25_Pred, 
+                              na.rm = T) # Using non-gapfilling data to calculate daily mean
         dat.daily$DailyMean[i.mean] <- DailyMean.tmp
         dat.daily$sqrtDailyMean[i.mean] <- sqrt(DailyMean.tmp)
       }
