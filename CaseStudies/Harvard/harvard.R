@@ -102,10 +102,18 @@ harvardCV <- function(all, fold = 10, times = 1) {
 #------------------------#
 # Calculate each row's buffer mean
 bufferMean <- function(df.row, dat, buffer) {
+  ### df.row - a row of the input data frame
+  ### dat - the data including original MAIAC AOD
+  
+  # Sampling the data
+  idx <- sample(1 : nrow(dat), 0.5*nrow(dat))
+  dat.reduced <- dat[idx, ]
+  # X and Y
   x.tmp <- df.row['X_Lon']
   y.tmp <- df.row['Y_Lat']
-  DailyMean.tmp <- mean(dat[dat$gapfill.tag == F & sqrt((dat$X_Lon - x.tmp)^2 + (dat$Y_Lat - y.tmp)^2) <= buffer, ]$PM25_Pred, 
-                        na.rm = T) # Using non-gapfilling data to calculate daily mean
+  # Mean calculation
+  dat.tmp <- subset(dat.reduced, sqrt((X_Lon - x.tmp)^2 + (Y_Lat - y.tmp)^2) <= buffer)
+  DailyMean.tmp <- mean(dat.tmp$PM25_Pred, na.rm = T) # Using non-gapfilling data to calculate daily mean
   
   return(DailyMean.tmp)
 }
@@ -214,6 +222,8 @@ for (m in this.jobs) { # For a month
       save(dat.daily.harvard, file = file.path(outpath.pred, paste(as.character(year), sprintf('%03d', i.doy), '_HARVARD.RData', sep = '')))
     }
   }
+  
+  gc()
   
   
 }
