@@ -166,7 +166,7 @@ for (m in this.jobs) { # For a month
       # }
       dat.daily.original <- subset(dat.daily, gapfill.tag == F) # Select the PM2.5 values predicted by original AOD
       print(paste('nrow :', as.character(nrow(dat.daily.original))))
-      if (nrow(dat.daily.original != 0)) {
+      if (nrow(dat.daily.original) != 0) {
         # Sampling the data
         if (nrow(dat.daily.original) > 10000){
           idx <- sample(1 : nrow(dat.daily.original), 10000)
