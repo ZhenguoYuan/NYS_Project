@@ -100,6 +100,16 @@ harvardCV <- function(all, fold = 10, times = 1) {
   
 }
 #------------------------#
+# Calculate each row's buffer mean
+bufferMean <- function(df.row, dat, buffer) {
+  x.tmp <- df.row$X_Lon
+  y.tmp <- df.row$Y_Lat
+  DailyMean.tmp <- mean(dat[dat$gapfill.tag == F & sqrt((dat$X_Lon - x.tmp)^2 + (dat$Y_Lat - y.tmp)^2) <= buffer, ]$PM25_Pred, 
+                        na.rm = T) # Using non-gapfilling data to calculate daily mean
+  
+  return(DailyMean.tmp)
+}
+
 
 for (m in this.jobs) { # For a month
   
@@ -111,6 +121,7 @@ for (m in this.jobs) { # For a month
   for (i.doy in month.start[m] : month.end[m]) { 
     
     print(i.doy)
+    print(Sys.time())
     
     # Load the PM2.5 data set
     pm25.filename <- file.path(inpath, paste(as.character(year), sprintf('%03d', i.doy), '_PM25PRED_RF.csv', sep = ''))
@@ -141,15 +152,17 @@ for (m in this.jobs) { # For a month
       dat.daily <- cbind(dat.daily, xy)
       
       # Daily Mean
-      for (i.mean in 1 : nrow(dat.daily)){
-        print(paste(as.character(i.doy), as.character(i.mean)))
-        x.tmp <- dat.daily$X_Lon[i.mean]
-        y.tmp <- dat.daily$Y_Lat[i.mean]
-        DailyMean.tmp <- mean(dat.daily[dat.daily$gapfill.tag == F & sqrt((dat.daily$X_Lon - x.tmp)^2 + (dat.daily$Y_Lat - y.tmp)^2) <= buffer, ]$PM25_Pred, 
-                              na.rm = T) # Using non-gapfilling data to calculate daily mean
-        dat.daily$DailyMean[i.mean] <- DailyMean.tmp
-        dat.daily$sqrtDailyMean[i.mean] <- sqrt(DailyMean.tmp)
-      }
+      # for (i.mean in 1 : nrow(dat.daily)){
+      #   x.tmp <- dat.daily$X_Lon[i.mean]
+      #   y.tmp <- dat.daily$Y_Lat[i.mean]
+      #   DailyMean.tmp <- mean(dat.daily[dat.daily$gapfill.tag == F & sqrt((dat.daily$X_Lon - x.tmp)^2 + (dat.daily$Y_Lat - y.tmp)^2) <= buffer, ]$PM25_Pred, 
+      #                         na.rm = T) # Using non-gapfilling data to calculate daily mean
+      #   dat.daily$DailyMean[i.mean] <- DailyMean.tmp
+      #   dat.daily$sqrtDailyMean[i.mean] <- sqrt(DailyMean.tmp)
+      # }
+      DailyMean <- apply(dat.daily, 2, FUN = bufferMean, dat.daily, buffer)
+      dat.daily$DailyMean <- DailyMean
+      dat.daily$sqrtDailyMean <- sqrt(DailyMean)
       
       # Sqrt PM2.5
       dat.daily$sqrtPM25_Pred <- sqrt(dat.daily$PM25_Pred)
