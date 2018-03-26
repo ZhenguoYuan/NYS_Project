@@ -85,7 +85,7 @@ harvardCV <- function(all, fold = 10, times = 1) {
       harvmod <- gam(sqrtPM25_Pred ~ sqrtDailyMean + s(X_Lon, Y_Lat, k = 10), data = dat.fit.train)
       sqrtPred <- predict(harvmod, dat.fit.test)
       y.pred <- sqrtPred * sqrtPred
-      cv.r2[i.fold + fold * (i_cv - 1)] <- cor(y, y.pred, na.rm = T) * cor(y, y.pred, na.rm = T)
+      cv.r2[i.fold + fold * (i_cv - 1)] <- cor(x = y, y = y.pred, use = "complete.obs") * cor(x = y, y = y.pred, use = "complete.obs")
       
       print(paste('CV R2 ', as.character(i_cv), '_',as.character(i.fold), ': ', as.character(cv.r2[i.fold + fold * (i_cv - 1)]), sep = ''))
       
