@@ -1,3 +1,12 @@
+#----------------------------------------------------------------------
+# Author: Jianzhao Bi
+#
+# Description: Plotting PM2.5 distribution (Original, Gap-filled, Cloud-only)
+# Notice: the size of saved image is 500 * 500
+#
+# Apr 6, 2018
+#----------------------------------------------------------------------
+
 library(ggplot2)
 library(ggmap)
 library(viridis)
@@ -11,6 +20,10 @@ source('../../Validations/PLOT2D/src/plot_fun.R')
 
 year <- 2015
 
+xlim <- c(-79.8, -72)
+ylim <- c(40.5, 45)
+
+
 ## ---------- Shp & Colorbar ---------- ##
 
 # Read shp
@@ -21,8 +34,8 @@ myshp <- fortify(myshp)
 
 # colorbar
 jet.colors <- colorRampPalette(c("#00007F", "blue", "#007FFF", "cyan", "#7FFF7F", "yellow", "#FF7F00", "red", "#7F0000"))
-diff.colors.nobias <- colorRampPalette(c('blue', 'white', 'red'))
-diff.colors.bias <- colorRampPalette(c('blue', 'white', 'red'), bias = 0.3)
+diff.colors.nobias <- colorRampPalette(c('#5b9aa0', 'white', '#622569'))
+diff.colors.bias <- colorRampPalette(c('#5b9aa0', 'white', '#622569'), bias = 0.36)
 
 # ---------- Full (All Year) ---------- #
 
@@ -32,9 +45,9 @@ pm25 <- pm25_combine_plot
 pm25 <- cutByShp(shp.name = shp.name, pm25)
 
 gg.pm25 <- plot2d(data = pm25, fill = pm25$PM25_Pred, 
-                  colorbar = jet.colors, colorbar_limits = c(3, 12),
+                  colorbar = jet.colors, colorbar_limits = c(3, 10),
                   shp = myshp, legend_name = 'PM2.5', title = paste(as.character(year), 'PM2.5'), 
-                  xlim = c(-80, -71.6), ylim = c(40.5, 45.25))
+                  xlim = xlim, ylim = ylim)
 
 # ---------- Original (All Year) ---------- #
 
@@ -43,17 +56,18 @@ pm25.ori <- pm25_combine_plot
 pm25.ori <- cutByShp(shp.name = shp.name, pm25.ori)
 
 gg.pm25.ori <- plot2d(data = pm25.ori, fill = pm25.ori$PM25_Pred_Avg, 
-                           colorbar = jet.colors, colorbar_limits = c(3, 12),
-                           shp = myshp, legend_name = 'PM2.5', title = paste(as.character(year), 'PM2.5 All Year Original AOD'), 
-                           xlim = c(-80, -71.6), ylim = c(40.5, 45.25))
+                      colorbar = jet.colors, colorbar_limits = c(3, 10),
+                      shp = myshp, legend_name = 'PM2.5', title = paste(as.character(year), 'PM2.5 All Year Original AOD'), 
+                      xlim = xlim, ylim = ylim)
 
 # ---------- Difference (Full - Original) ---------- #
 pm25.diff <- data.frame(Lat = pm25$Lat, Lon = pm25$Lon, diff = pm25$PM25_Pred - pm25.ori$PM25_Pred)
 
 gg.pm25.diff <- plot2d(data = pm25.diff, fill = pm25.diff$diff,
-                       colorbar = diff.colors.bias, colorbar_limits = c(-2, 0.5),
-                       shp = myshp, legend_name = 'PM2.5', title = paste(as.character(year), 'PM2.5 Diff'),
-                       xlim = c(-80, -71.6), ylim = c(40.5, 45.25))
+                       colorbar = diff.colors.bias, colorbar_limits = c(-1.5, 0.5),
+                       shp = myshp, legend_name = 'ug/m3', title = '(c) Difference between Full and Original PM2.5',
+                       xlim = xlim, ylim = ylim)
+gg.pm25.diff
 
 # Stat
 pm25.diff.stat <- pm25$PM25_Pred - pm25.ori$PM25_Pred
@@ -74,9 +88,9 @@ pm25.ori.snow <- pm25_combine_plot_snow
 pm25.ori.snow <- cutByShp(shp.name = shp.name, pm25.ori.snow)
 
 gg.pm25.ori.snow <- plot2d(data = pm25.ori.snow, fill = pm25.ori.snow$PM25_Pred_Avg, 
-                      colorbar = jet.colors, colorbar_limits = c(3, 12),
-                      shp = myshp, legend_name = 'PM2.5', title = paste(as.character(year), 'PM2.5 Snow Season'), 
-                      xlim = c(-80, -71.6), ylim = c(40.5, 45.25))
+                           colorbar = jet.colors, colorbar_limits = c(3, 10),
+                           shp = myshp, legend_name = 'PM2.5', title = paste(as.character(year), 'PM2.5 Snow Season'), 
+                           xlim = xlim, ylim = ylim)
 
 # ---------- Gapfilled (Cloud+Snow) (Snow Season) ---------- #
 
@@ -86,9 +100,9 @@ pm25.gap.snow <- pm25_combine_plot_snow
 pm25.gap.snow <- cutByShp(shp.name = shp.name, pm25.gap.snow)
 
 gg.pm25.gap.snow <- plot2d(data = pm25.gap.snow, fill = pm25.gap.snow$PM25_Pred_Avg, 
-                      colorbar = jet.colors, colorbar_limits = c(3, 12),
-                      shp = myshp, legend_name = 'PM2.5', title = paste(as.character(year), 'PM2.5 Snow Season'), 
-                      xlim = c(-80, -71.6), ylim = c(40.5, 45.25))
+                           colorbar = jet.colors, colorbar_limits = c(3, 10),
+                           shp = myshp, legend_name = 'PM2.5', title = paste(as.character(year), 'PM2.5 Snow Season'), 
+                           xlim = xlim, ylim = ylim)
 
 # ---------- Cloud Only (Snow Season) ---------- #
 
@@ -98,9 +112,9 @@ pm25.cld.snow <- pm25_combine_plot_snow
 pm25.cld.snow <- cutByShp(shp.name = shp.name, pm25.cld.snow)
 
 gg.pm25.cld.snow <- plot2d(data = pm25.cld.snow, fill = pm25.cld.snow$PM25_Pred_Avg, 
-                      colorbar = jet.colors, colorbar_limits = c(3, 12),
-                      shp = myshp, legend_name = 'PM2.5', title = paste(as.character(year), 'PM2.5 Snow Season'),
-                      xlim = c(-80, -71.6), ylim = c(40.5, 45.25))
+                           colorbar = jet.colors, colorbar_limits = c(3, 10),
+                           shp = myshp, legend_name = 'PM2.5', title = paste(as.character(year), 'PM2.5 Snow Season'),
+                           xlim = xlim, ylim = ylim)
 
 # ---------- Difference (Cloud+Snow - Cloud Only) (Snow Season) ---------- #
 
@@ -112,10 +126,10 @@ quantile(pm25.diff.snow$diff, 0.75)
 max(pm25.diff.snow$diff)
 
 gg.pm25.diff.snow <- plot2d(data = pm25.diff.snow, fill = pm25.diff.snow$diff, 
-                           colorbar = diff.colors.nobias, colorbar_limits = c(-0.5, 0.5),
-                           shp = myshp, legend_name = 'PM2.5', title = paste(as.character(year), 'PM2.5 Difference Snow Season'),
-                           xlim = c(-80, -71.6), ylim = c(40.5, 45.25))
-
+                            colorbar = diff.colors.nobias, colorbar_limits = c(-0.2, 0.2),
+                            shp = myshp, legend_name = 'ug/m3', title = '(d) Difference between Full and Cloud-only PM2.5',
+                            xlim = xlim, ylim = ylim)
+gg.pm25.diff.snow
 
 
 pop <- read.csv(file = 'data/lspop2015.csv')
@@ -169,9 +183,9 @@ pm25.pop.gap.snow <- cutByShp(shp.name = shp.name, pm25.pop.gap.snow)
 pm25.pop.gap.snow$PM25.POP <- pm25.pop.gap.snow$PM25_Pred_Avg * pm25.pop.gap.snow$pop
 pm25.pop.gap.snow$log.PM25.POP <- log(pm25.pop.gap.snow$PM25.POP)
 gg.pm25.pop.gap.snow <- plot2d(data = pm25.pop.gap.snow, fill = pm25.pop.gap.snow$log.PM25.POP, 
-                      colorbar = jet.colors, colorbar_limits = c(0, 10),
-                      shp = myshp, legend_name = 'log(PM2.5*POP)', title = paste(as.character(year), 'log(PM2.5*POP) Snow Season'),
-                      xlim = c(-80, -71.6), ylim = c(40.5, 45.25))
+                               colorbar = jet.colors, colorbar_limits = c(0, 10),
+                               shp = myshp, legend_name = 'log(PM2.5*POP)', title = paste(as.character(year), 'log(PM2.5*POP) Snow Season'),
+                               xlim = xlim, ylim = ylim)
 
 
 # pop * Cloud Only PM2.5
@@ -181,16 +195,16 @@ pm25.pop.cld.snow <- cutByShp(shp.name = shp.name, pm25.pop.cld.snow)
 pm25.pop.cld.snow$PM25.POP <- pm25.pop.cld.snow$PM25_Pred_Avg * pm25.pop.cld.snow$pop
 pm25.pop.cld.snow$log.PM25.POP <- log(pm25.pop.cld.snow$PM25.POP)
 gg.pm25.pop.cld.snow <- plot2d(data = pm25.pop.cld.snow, fill = pm25.pop.cld.snow$log.PM25.POP, 
-                          colorbar = jet.colors, colorbar_limits = c(0, 10),
-                          shp = myshp, legend_name = 'log(PM2.5*POP)', title = paste(as.character(year), 'log(PM2.5*POP) Snow Season'),
-                          xlim = c(-80, -71.6), ylim = c(40.5, 45.25))
+                               colorbar = jet.colors, colorbar_limits = c(0, 10),
+                               shp = myshp, legend_name = 'log(PM2.5*POP)', title = paste(as.character(year), 'log(PM2.5*POP) Snow Season'),
+                               xlim = xlim, ylim = ylim)
 
 # Log difference plot (full pm25-pop / original pm25-pop)
 ratio.snow <- data.frame(Lat = pm25.pop.gap.snow$Lat, Lon = pm25.pop.gap.snow$Lon, r = pm25.pop.gap.snow$log.PM25.POP/pm25.pop.cld.snow$log.PM25.POP)
 gg.ratio.snow <- plot2d(data = ratio.snow, fill = ratio.snow$r, 
-                   colorbar = diff.colors.nobias, colorbar_limits = c(0.98, 1.02),
-                   shp = myshp, legend_name = 'log ratio', title = paste(as.character(year), 'log ratio Snow Season'),
-                   xlim = c(-80, -71.6), ylim = c(40.5, 45.25))
+                        colorbar = diff.colors.nobias, colorbar_limits = c(0.98, 1.02),
+                        shp = myshp, legend_name = 'log ratio', title = paste(as.character(year), 'log ratio Snow Season'),
+                        xlim = xlim, ylim = ylim)
 
 # Population weighted PM2.5 difference
 diff.snow <- pm25.pop.gap.snow$PM25.POP - pm25.pop.cld.snow$PM25.POP

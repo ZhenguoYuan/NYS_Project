@@ -1,3 +1,12 @@
+#----------------------------------------------------------------------
+# Author: Jianzhao Bi
+#
+# Description: Plotting PM2.5 distribution (Our Model and Harvard Model)
+# Notice: the size of saved image is 500 * 500
+#
+# Apr 6, 2018
+#----------------------------------------------------------------------
+
 library(ggplot2)
 library(ggmap)
 library(viridis)
@@ -11,6 +20,8 @@ source('../../Validations/PLOT2D/src/plot_fun.R')
 
 year <- 2015
 
+xlim <- c(-79.8, -72)
+ylim <- c(40.5, 45)
 
 ## ---------- Shp & Colorbar ---------- ##
 
@@ -32,9 +43,9 @@ pm25 <- pm25_combine_plot
 pm25 <- cutByShp(shp.name = shp.name, pm25)
 
 gg_pm25 <- plot2d(data = pm25, fill = pm25$PM25_Pred, 
-                  colorbar = jet.colors, colorbar_limits = c(3, 12),
-                  shp = myshp, legend_name = 'PM2.5', title = paste(as.character(year), 'PM2.5'), 
-                  xlim = c(-80, -71.6), ylim = c(40.5, 45.25))
+                  colorbar = jet.colors, colorbar_limits = c(3, 10),
+                  shp = myshp, legend_name = 'ug/m3', title = '(a) PM2.5 Annual Distribution',
+                  xlim = xlim, ylim = ylim)
 
 
 # ---------- Harvard ---------- #
@@ -45,6 +56,6 @@ pm25_harv <- pm25_combine_plot
 pm25_harv <- cutByShp(shp.name = shp.name, pm25_harv)
 
 gg_pm25_harv <- plot2d(data = pm25_harv, fill = pm25_harv$PM25_Pred_Avg, 
-                      colorbar = jet.colors, colorbar_limits = c(3, 12),
-                      shp = myshp, legend_name = 'PM2.5', title = paste(as.character(year), 'PM2.5'), 
-                      xlim = c(-80, -71.6), ylim = c(40.5, 45.25))
+                       colorbar = jet.colors, colorbar_limits = c(3, 10),
+                       shp = myshp, legend_name = 'ug/m3', title = '(b) Gap-filled PM2.5 by Previous Model', 
+                       xlim = xlim, ylim = ylim)

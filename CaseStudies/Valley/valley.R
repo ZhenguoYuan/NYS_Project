@@ -1,9 +1,19 @@
+#----------------------------------------------------------------------
+# Author: Jianzhao Bi
+#
+# Description: PM2.5 Valley Accumulation
+# Notice: the size of saved image is 500 * 500
+#
+# Apr 6, 2018
+#----------------------------------------------------------------------
+
 setwd('~/Google Drive/Projects/Codes/NYS_Project/CaseStudies/Valley/')
 source('../../src/fun.R')
 source('../../Validations/PLOT2D/src/plot_fun.R')
 
 library(RColorBrewer)
 library(ggmap)
+library(ggsn)
 
 ## ---------- Data ---------- ##
 
@@ -34,10 +44,11 @@ plot2d.dem <- function (data, colorbar, colorbar_limits = NULL, shp, legend_name
     geom_tile(data = data, aes(Lon, Lat, fill = PM25_Pred, width = 0.014, height = 0.014), alpha = 1) +
     scale_fill_gradientn(colours = colorbar, limits = colorbar_limits, oob = scales::squish) + # scales::squish is forcing all color display for points outside the legend range
     geom_polygon(data = shp, aes(x = long, y = lat, group = group), color = "black", fill = NA) +
-    labs(fill = legend_name) + ggtitle(title) + coord_fixed(xlim = xlim,  ylim = ylim, ratio = 1) # Using coord_fixed to realize true zoom in!
+    labs(fill = legend_name) + ggtitle(title) + coord_fixed(xlim = xlim,  ylim = ylim, ratio = 1) + # Using coord_fixed to realize true zoom in!
+    scalebar(x.min = min(xlim), x.max = max(xlim), y.min = min(ylim), y.max = max(ylim), dist = 2, dd2km = TRUE, st.size = 2, model = 'WGS84', location = 'bottomleft') 
   
   #gg <- gg + geom_contour(data = dem, aes(x = x, y = y, z = var1.pred, colour = ..level..), bin = 8)#, size = 0.2, alpha = 0.7)
-  gg <- gg + geom_contour(data = dem, aes(x = x, y = y, z = var1.pred), binwidth = 140, colour = 'white')
+  gg <- gg + geom_contour(data = dem, aes(x = x, y = y, z = var1.pred), binwidth = 140, colour = 'black')
   #gg <- direct.label(gg, list("far.from.others.borders", "calc.boxes", "enlarge.box", hjust = 1, vjust = 1, box.color = NA, fill = "transparent", "draw.rects"))
   
   # colours = colorbar(100)
@@ -61,10 +72,11 @@ plot2d.dem <- function (data, colorbar, colorbar_limits = NULL, shp, legend_name
 load('data/dem.RData')
 
 # Plot PM2.5 distribution with DEM
-dem.color <- rev(brewer.pal(n = 9, name = "YlGnBu"))
+#dem.color <- rev(brewer.pal(n = 9, name = "YlGnBu"))
+dem.color <- brewer.pal(n = 9, name = "YlGnBu")
 gg.list <- plot2d.dem(data = pm25_combine_plot_winter,
                       colorbar = dem.color, colorbar_limits = c(5.5, 8),
-                      shp = myshp, legend_name = 'PM2.5', title = paste(as.character(year), 'PM2.5 with DEM'), dem.reg,
+                      shp = myshp, legend_name = 'ug/m3', title = 'PM2.5 Accumulation in Valleys', dem.reg,
                       xlim = c(-75.5, -75.15), ylim = c(42.375, 42.75))
 
 # PM2.5 concentration with contours
