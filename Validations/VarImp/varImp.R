@@ -9,7 +9,7 @@
 
 setwd('~/Google Drive/Projects/Codes/NYS_Project/Validations/VarImp/')
 
-load('2015_RFMODEL_RF.RData')
+load('data/2015_RFMODEL_RF.RData')
 
 library(randomForest)
 
