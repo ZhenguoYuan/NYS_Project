@@ -143,7 +143,7 @@ save(rf.fit ,file = file.path(outpath, paste(year, '_RFMODEL_RF.RData', sep = ''
 ## -------------------------------------- ##
 
 print('Modeling CV using all AOD')
-RF_CV(all, fm, fold = 10, times = 1)
+y.list.all <- RF_CV(all, fm, fold = 10, times = 1)
 
 ## ---------- Original or Gap-filling Cross-validation ---------- ##
 # Using only original AOD or gap-filled AOD to predict PM2.5 and to calculate CV R2
@@ -152,12 +152,12 @@ RF_CV(all, fm, fold = 10, times = 1)
 # Original AOD
 print('Modeling CV using original AOD')
 all_ori <- subset(all, Gapfill_tag_AAOT550 == 0 & Gapfill_tag_TAOT550 == 0) # Only select grid cells with original AOTs
-RF_CV(all_ori, fm, fold = 10, times = 1)
+y.list.ori <- RF_CV(all_ori, fm, fold = 10, times = 1)
 
 # Gap-filled AOD
 print('Modeling CV using gap-filled AOD')
 all_gap <- subset(all, Gapfill_tag_AAOT550 == 1 & Gapfill_tag_TAOT550 == 1) # Only select grid cells with gap-filled AAOT and TAOT
-RF_CV(all_gap, fm, fold = 10, times = 1)
+y.list.gap <- RF_CV(all_gap, fm, fold = 10, times = 1)
 
 ## ---------- Spatial and Temporal Cross-validation ---------- ##
 
@@ -165,12 +165,15 @@ RF_CV(all_gap, fm, fold = 10, times = 1)
 # Randomly removing certain PM2.5 sites to get the CV R2
 print('Spatial CV')
 all$site <- interaction(all$Lat, all$Lon) # Using Lat and Lon to locate a PM2.5 site
-RF_CV(all, fm, fold = 10, times = 1, by = 'site')
+y.list.spa <- RF_CV(all, fm, fold = 10, times = 1, by = 'site')
 
 # Temporal CV
 # Randomly removing certain days of PM2.5 to get the CV R2
 print('Temporal CV')
-RF_CV(all, fm, fold = 10, times = 1, by = 'doy')
+y.list.tem <- RF_CV(all, fm, fold = 10, times = 1, by = 'doy')
+
+## ---------- Save CV Results ---------- ##
+save(y.list.all, y.list.ori, y.list.gap, y.list.spa, y.list.tem, file = file.path(outpath, paste(year, '_CV_RF.RData', sep = '')))
 
 ##################################
 # Output screen contents to file #

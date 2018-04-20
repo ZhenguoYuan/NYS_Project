@@ -98,6 +98,7 @@ RF_CV <- function(all, formula, fold = 10, times = 1, by = '') {
       
       # Randonly reorder the sequence
       idx <- 1 : nrow(all)
+      set.seed(1118)
       idx <- sample(idx, size = length(idx), replace = F)
       # Splitting the dataset by the number of fold
       groups <- split(1 : length(idx), 1 : fold)
@@ -117,6 +118,8 @@ RF_CV <- function(all, formula, fold = 10, times = 1, by = '') {
     }
     
     # For each fold
+    y.all <- c()
+    y.pred.all <- c()
     for (i.fold in 1 : fold) {
       
       # ----- Allocation ----- #
@@ -138,6 +141,10 @@ RF_CV <- function(all, formula, fold = 10, times = 1, by = '') {
       y.pred <- predict(rf.fit.cv, dat.fit.test)
       cv.r2[i.fold + fold * (i_cv - 1)] <- cor(y, y.pred) * cor(y, y.pred)
       
+      # Save the original values and predicted values
+      y.all <- c(y.all, y)
+      y.pred.all <- c(y.pred.all, y.pred)
+      
       print(paste('CV R2 ', as.character(i_cv), '_',as.character(i.fold), ': ', as.character(cv.r2[i.fold + fold * (i_cv - 1)]), sep = ''))
       
       gc()
@@ -148,6 +155,9 @@ RF_CV <- function(all, formula, fold = 10, times = 1, by = '') {
   
   print(paste('Mean CV R2:', as.character(mean(cv.r2))))
   print('============== CV Completed ==============')
+  
+  y.list <- list(y = y.all, y.pred = y.pred.all)
+  return(y.list)
   
 }
 

@@ -1,7 +1,7 @@
 # Calculating the daily AOD missingness
 #
 # Author: Jianzhao Bi
-# May 10, 2018
+# March 10, 2018
 
 library(maptools)
 

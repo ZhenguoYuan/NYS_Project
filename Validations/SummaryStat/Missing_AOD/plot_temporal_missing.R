@@ -60,42 +60,52 @@ month.trend.taot <- trendInPeriod(dat = rates.taot, cycle = 30)
 
 ## AAOT
 mean(rates.aaot$overall)
+median(rates.aaot$overall)
 quantile(rates.aaot$overall, 0.25, na.rm = T)
 quantile(rates.aaot$overall, 0.75, na.rm = T)
 
 mean(rates.aaot$cloud)
+median(rates.aaot$cloud)
 quantile(rates.aaot$cloud, 0.25, na.rm = T)
 quantile(rates.aaot$cloud, 0.75, na.rm = T)
 
 mean(rates.aaot$snow)
+median(rates.aaot$snow)
 quantile(rates.aaot$snow, 0.25, na.rm = T)
 quantile(rates.aaot$snow, 0.75, na.rm = T)
 
 mean(rates.aaot$snow[1 : 105]) # First 15 weeks
+median(rates.aaot$snow[1 : 105])
 quantile(rates.aaot$snow[1 : 105], 0.25, na.rm = T)
 quantile(rates.aaot$snow[1 : 105], 0.75, na.rm = T)
 
 mean(rates.aaot$waterice)
+median(rates.aaot$waterice)
 quantile(rates.aaot$waterice, 0.25, na.rm = T)
 quantile(rates.aaot$waterice, 0.75, na.rm = T)
 
 ## TAOT
 mean(rates.taot$overall, na.rm = T)
+median(rates.taot$overall, na.rm = T)
 quantile(rates.taot$overall, 0.25, na.rm = T)
 quantile(rates.taot$overall, 0.75, na.rm = T)
 
 mean(rates.taot$cloud, na.rm = T)
+median(rates.taot$cloud, na.rm = T)
 quantile(rates.taot$cloud, 0.25, na.rm = T)
 quantile(rates.taot$cloud, 0.75, na.rm = T)
 
 mean(rates.taot$snow, na.rm = T)
+median(rates.taot$snow, na.rm = T)
 quantile(rates.taot$snow, 0.25, na.rm = T)
 quantile(rates.taot$snow, 0.75, na.rm = T)
 
 mean(rates.taot$snow[1 : 105], na.rm = T) # First 15 weeks
+median(rates.taot$snow[1 : 105], na.rm = T)
 quantile(rates.taot$snow[1 : 105], 0.25, na.rm = T)
 quantile(rates.taot$snow[1 : 105], 0.75, na.rm = T)
 
 mean(rates.taot$waterice, na.rm = T)
+median(rates.taot$waterice, na.rm = T)
 quantile(rates.taot$waterice, 0.25, na.rm = T)
 quantile(rates.taot$waterice, 0.75, na.rm = T)
