@@ -24,7 +24,6 @@ DAT_ORG <- function(dat, year) {
   # dat$short_flux_surf_NLDAS2 <- dat$short_flux_surf_NLDAS^2 # Surface Incident Shortwave Flux ^ 2
   dat$WIND_NARR <- sqrt(dat$UWND_NARR^2 + dat$VWND_NARR^2) # Wind speed
   dat$month <- month(as.Date(dat$doy - 1, origin = paste(as.character(year), '-01-01', sep = '')))
-  dat <- subset(dat, PM25 >= 0) # Remove negative PM2.5 measurements
   
   return(dat)
   
