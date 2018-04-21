@@ -24,6 +24,7 @@ DAT_ORG <- function(dat, year) {
   # dat$short_flux_surf_NLDAS2 <- dat$short_flux_surf_NLDAS^2 # Surface Incident Shortwave Flux ^ 2
   dat$WIND_NARR <- sqrt(dat$UWND_NARR^2 + dat$VWND_NARR^2) # Wind speed
   dat$month <- month(as.Date(dat$doy - 1, origin = paste(as.character(year), '-01-01', sep = '')))
+  dat <- subset(dat, PM25 >= 0) # Remove negative PM2.5 measurements
   
   return(dat)
   
@@ -51,12 +52,12 @@ RF_MODEL <- function(all, formula, if.print = T, is.cv = F) {
   
   if (is.cv == F) {
     #Rprof(tmp <- tempfile())
-    rf.fit <- randomForest(formula, data = all, ntree = 200, importance = T)
+    rf.fit <- randomForest(formula, data = all, ntree = 1000, importance = T)
     #Rprof()
     #summaryRprof(tmp)
   } else {
     registerDoSNOW(makeCluster(5, type="SOCK"))
-    rf.fit <- foreach(ntree = rep(40, 5), .combine = combine, .packages = "randomForest") %dopar%
+    rf.fit <- foreach(ntree = rep(200, 5), .combine = combine, .packages = "randomForest") %dopar%
       randomForest(formula, data = all, ntree = ntree, importance = T)
   }
   
@@ -110,6 +111,7 @@ RF_CV <- function(all, formula, fold = 10, times = 1, by = '') {
       # Getting unique values of the splitting variable
       var.unique <- unique(var)
       # Randonly reorder the sequence
+      set.seed(1118)
       var.unique <- sample(var.unique, size = length(var.unique), replace = F)
       # Splitting the dataset by the number of fold
       groups.unique <- split(var.unique, 1 : fold)

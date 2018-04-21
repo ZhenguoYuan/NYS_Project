@@ -32,6 +32,7 @@ for (year in 2015 : 2015) {
   # colorbar
   # define jet colormap
   jet.colors <- colorRampPalette(c("#00007F", "blue", "#007FFF", "cyan", "#7FFF7F", "yellow", "#FF7F00", "red", "#7F0000"))
+  rainbow.colors <- colorRampPalette(c('#0000ff', '#0054ff', '#00abff', '#00ffff', '#54ffab', '#abff53', '#ffff00', '#ffaa00', '#ff5400', '#ff0000'))
   
   # ---------- PLOT PM2.5 ---------- #
   
