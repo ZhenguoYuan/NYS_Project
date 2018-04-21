@@ -19,6 +19,7 @@ if (!file.exists(outpath)){
 
 ## ---------- Combining ---------- ##
 pm25_combine_plot <- combine4pm25(c(1 : numdays), year, inpath) # All year
+pm25_combine_plot_snow <- combine4pm25(c(1 : 105), year, inpath) # Snow Season
 pm25_combine_plot_spring <- combine4pm25(c(61 : 152), year, inpath) # Spring
 pm25_combine_plot_summer <- combine4pm25(c(153 : 244), year, inpath) # Summer
 pm25_combine_plot_fall <- combine4pm25(c(245 : 336), year, inpath) # Fall
@@ -26,6 +27,7 @@ pm25_combine_plot_winter <- combine4pm25(c(c(1 : 60), c(337 : numdays)), year, i
   
 ## ---------- Output ---------- ##
 save(pm25_combine_plot, file = file.path(outpath, 'pm25_combine_plot.RData'))
+save(pm25_combine_plot_snow, file = file.path(outpath, 'pm25_combine_plot_snow.RData'))
 save(pm25_combine_plot_spring, file = file.path(outpath, 'pm25_combine_plot_spring.RData'))
 save(pm25_combine_plot_summer, file = file.path(outpath, 'pm25_combine_plot_summer.RData'))
 save(pm25_combine_plot_fall, file = file.path(outpath, 'pm25_combine_plot_fall.RData'))
