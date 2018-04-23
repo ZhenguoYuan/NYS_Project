@@ -2,7 +2,7 @@
 # Author: Jianzhao Bi
 #
 # Description: Plotting PM2.5 distribution (Original, Gap-filled, Cloud-only)
-# Notice: the size of saved image is 500 * 500
+# Notice: the size of saved image is 535 * 502
 #
 # Apr 6, 2018
 #----------------------------------------------------------------------
@@ -34,8 +34,9 @@ myshp <- fortify(myshp)
 
 # colorbar
 jet.colors <- colorRampPalette(c("#00007F", "blue", "#007FFF", "cyan", "#7FFF7F", "yellow", "#FF7F00", "red", "#7F0000"))
-diff.colors.nobias <- colorRampPalette(c('#5b9aa0', 'white', '#622569'))
-diff.colors.bias <- colorRampPalette(c('#5b9aa0', 'white', '#622569'), bias = 0.36)
+rainbow.colors <- colorRampPalette(c('#0000ff', '#0054ff', '#00abff', '#00ffff', '#54ffab', '#abff53', '#ffff00', '#ffaa00', '#ff5400', '#ff0000'))
+diff.colors.nobias <- colorRampPalette(c('#7f7fff', 'white', '#EF4566'))
+diff.colors.bias <- colorRampPalette(c('#7f7fff', 'white', '#EF4566'), bias = 0.36)
 
 # ---------- Full (All Year) ---------- #
 
@@ -65,9 +66,8 @@ pm25.diff <- data.frame(Lat = pm25$Lat, Lon = pm25$Lon, diff = pm25$PM25_Pred - 
 
 gg.pm25.diff <- plot2d(data = pm25.diff, fill = pm25.diff$diff,
                        colorbar = diff.colors.bias, colorbar_limits = c(-1.5, 0.5),
-                       shp = myshp, legend_name = 'ug/m3', title = '(c) Difference between Full and Original PM2.5',
-                       xlim = xlim, ylim = ylim)
-gg.pm25.diff
+                       shp = myshp, legend_name = expression(paste(mu, g/m^3)), title = '(c) Full/Original PM2.5 Differences',
+                       xlim = xlim, ylim = ylim, hjust = 0.1)
 
 # Stat
 pm25.diff.stat <- pm25$PM25_Pred - pm25.ori$PM25_Pred
@@ -126,10 +126,9 @@ quantile(pm25.diff.snow$diff, 0.75)
 max(pm25.diff.snow$diff)
 
 gg.pm25.diff.snow <- plot2d(data = pm25.diff.snow, fill = pm25.diff.snow$diff, 
-                            colorbar = diff.colors.nobias, colorbar_limits = c(-0.2, 0.2),
-                            shp = myshp, legend_name = 'ug/m3', title = '(d) Difference between Full and Cloud-only PM2.5',
-                            xlim = xlim, ylim = ylim)
-gg.pm25.diff.snow
+                            colorbar = diff.colors.nobias, colorbar_limits = c(-0.3, 0.3),
+                            shp = myshp, legend_name = expression(paste(mu, g/m^3)), title = '(d) Full/CloudOnly PM2.5 Differences',
+                            xlim = xlim, ylim = ylim, hjust = 0.05)
 
 
 pop <- read.csv(file = 'data/lspop2015.csv')

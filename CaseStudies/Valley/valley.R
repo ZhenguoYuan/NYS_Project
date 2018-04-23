@@ -2,7 +2,7 @@
 # Author: Jianzhao Bi
 #
 # Description: PM2.5 Valley Accumulation
-# Notice: the size of saved image is 500 * 500
+# Notice: the size of saved image is 535 * 502
 #
 # Apr 6, 2018
 #----------------------------------------------------------------------
@@ -41,11 +41,14 @@ plot2d.dem <- function (data, colorbar, colorbar_limits = NULL, shp, legend_name
   gg.map <-  ggmap(map, extent = 'panel') + coord_fixed(xlim = xlim,  ylim = ylim, ratio = 1) + geom_contour(data = dem, aes(x = x, y = y, z = var1.pred), binwidth = 140, , colour = 'white')
   
   gg <- ggplot() +
-    geom_tile(data = data, aes(Lon, Lat, fill = PM25_Pred, width = 0.014, height = 0.014), alpha = 1) +
+    geom_tile(data = data, aes(Lon, Lat, fill = PM25_Pred_Avg, width = 0.014, height = 0.014), alpha = 1) +
     scale_fill_gradientn(colours = colorbar, limits = colorbar_limits, oob = scales::squish) + # scales::squish is forcing all color display for points outside the legend range
     geom_polygon(data = shp, aes(x = long, y = lat, group = group), color = "black", fill = NA) +
     labs(fill = legend_name) + ggtitle(title) + coord_fixed(xlim = xlim,  ylim = ylim, ratio = 1) + # Using coord_fixed to realize true zoom in!
-    scalebar(x.min = min(xlim), x.max = max(xlim), y.min = min(ylim), y.max = max(ylim), dist = 2, dd2km = TRUE, st.size = 2, model = 'WGS84', location = 'bottomleft') 
+    xlab('Longitude (degree)') + ylab('Latitude (degree)') + 
+    scalebar(x.min = min(xlim), x.max = max(xlim), y.min = min(ylim), y.max = max(ylim), dist = 3, dd2km = TRUE, st.size = 4, model = 'WGS84', location = 'bottomleft') +
+    theme(legend.key.height=unit(2.5, "line"), legend.title = element_text(size = rel(1.2)),
+          legend.text = element_text(size = rel(1)), axis.title = element_text(size = rel(1.2)), axis.text = element_text(size = rel(1)))
   
   #gg <- gg + geom_contour(data = dem, aes(x = x, y = y, z = var1.pred, colour = ..level..), bin = 8)#, size = 0.2, alpha = 0.7)
   gg <- gg + geom_contour(data = dem, aes(x = x, y = y, z = var1.pred), binwidth = 140, colour = 'black')
@@ -76,7 +79,7 @@ load('data/dem.RData')
 dem.color <- brewer.pal(n = 9, name = "YlGnBu")
 gg.list <- plot2d.dem(data = pm25_combine_plot_winter,
                       colorbar = dem.color, colorbar_limits = c(5.5, 8),
-                      shp = myshp, legend_name = 'ug/m3', title = 'PM2.5 Accumulation in Valleys', dem.reg,
+                      shp = myshp, legend_name = expression(paste(mu, g/m^3)), title = '', dem.reg,
                       xlim = c(-75.5, -75.15), ylim = c(42.375, 42.75))
 
 # PM2.5 concentration with contours

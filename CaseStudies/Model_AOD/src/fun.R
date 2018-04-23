@@ -111,6 +111,7 @@ RFModelAOD <- function (inpath.cm, inpath.rf, outpath, year, start.date, end.dat
   
   # Organizing
   all <- DAT_ORG(all, year)
+  all <- subset(all, PM25 >= 0) # Remove negative PM2.5 measurements
   # RF Modeling
   rf.fit <- RF_MODEL(all, fm)
   # Output
