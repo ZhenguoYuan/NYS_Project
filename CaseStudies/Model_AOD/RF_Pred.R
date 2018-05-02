@@ -22,6 +22,19 @@ numdays <- numOfYear(as.numeric(year))
 
 inpath.cm <- file.path('/home/jbi6/terra/MAIAC_GRID_OUTPUT/Combine', as.character(year))
 
+## ---------- Without AOD ---------- ##
+
+# Input paths
+inpath <- file.path('/home/jbi6/terra/MAIAC_GRID_OUTPUT/CaseStudies/MODEL_AOD/WithoutAOD/PM25_FIT_RFMODEL', as.character(year))
+inpath.rf <- file.path('/home/jbi6/terra/MAIAC_GRID_OUTPUT/RF', as.character(year))
+# Output path
+outpath <- file.path('/home/jbi6/terra/MAIAC_GRID_OUTPUT/CaseStudies/MODEL_AOD/WithoutAOD/PM25_PRED_RFMODEL', as.character(year))
+if (!file.exists(outpath)){
+  dir.create(outpath, recursive = T)
+}
+
+RFPredAOD(inpath, inpath.rf, inpath.cm, outpath, year, start.date = 1, end.date = numdays, tag = 'WithoutAOD') 
+
 ## ---------- Original AOD ---------- ##
 
 # Input paths

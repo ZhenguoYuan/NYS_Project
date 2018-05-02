@@ -26,6 +26,29 @@ tag <- missing.cloud.tag | missing.snow.tag | nonmissing.tag
 
 dat.new <- dat.copy[!tag, ]
 
+# Test the levels of QA flags for these missing data
+dat.new2 <- dat.new
+dat.new2$AOT_QA <- as.factor(dat.new2$AOT_QA)
+levels(dat.new2$AOT_QA)
+dat.new2$QA_cloudmask <- as.factor(dat.new2$QA_cloudmask)
+levels(dat.new2$QA_cloudmask)
+dat.new2$QA_landmask <- as.factor(dat.new2$QA_landmask)
+levels(dat.new2$QA_landmask)
+dat.new2$QA_adjmask <- as.factor(dat.new2$QA_adjmask)
+levels(dat.new2$QA_adjmask)
+dat.new2$QA_cloudtest <- as.factor(dat.new2$QA_cloudtest)
+levels(dat.new2$QA_cloudtest)
+dat.new2$QA_glintmask <- as.factor(dat.new2$QA_glintmask)
+levels(dat.new2$QA_glintmask)
+dat.new2$QA_aerosolmodel <- as.factor(dat.new2$QA_aerosolmodel)
+levels(dat.new2$QA_aerosolmodel)
+dat.new2$QA_aotqualityflag <- as.factor(dat.new2$QA_aotqualityflag)
+levels(dat.new2$QA_aotqualityflag)
+
+# If you see cloud mask gives “000 --- missing data”, 
+# that means these pixels located in the area outside the sensor scan. 
+# Since MAIAC data is gridded, those areas will be filled with fillvalue.
+
 # ----- Plot ----- #
 
 myshp <- readShapePoly('~/Google Drive/Projects/Codes/Public/shp/cb_2016_us_state_20m/cb_2016_us_state_20m.shp')

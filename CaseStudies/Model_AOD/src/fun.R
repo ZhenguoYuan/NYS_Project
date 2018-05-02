@@ -1,41 +1,8 @@
-RFModelAOD <- function (inpath.cm, inpath.rf, outpath, year, start.date, end.date, filter = NULL) {
+RFModelAOD <- function (formula, inpath.cm, inpath.rf, outpath, year, start.date, end.date, filter = NULL) {
   
   ## -------------------------------------- ##
   ## -------------- Modeling -------------- ##
   ## -------------------------------------- ##
-  
-  # ---------- Formula ---------- ##
-  fm <- PM25 ~ 
-    # --- AOD --- #
-    AAOT550_New + 
-    TAOT550_New +
-    # --- Meteorology --- #
-    # AIR_NARR +
-    HPBL_NARR +
-    # RHUM_NARR +
-    DPT_NARR +
-    VIS_NARR +
-    WIND_NARR +
-    temp_2m_NLDAS +
-    surf_pres_NLDAS +
-    pot_evap_NLDAS +
-    # long_radi_surf_NLDAS +
-    # short_radi_surf_NLDAS +
-    short_flux_surf_NLDAS +
-    spec_humi_2m_NLDAS +
-    # total_prec_NLDAS +
-    cape_NLDAS +
-    # --- LULC --- #
-    pop +
-    HighwayDist + 
-    MajorDist +
-    DEM +
-    # GRIDCODE +
-    NDVI +
-    PM_cov +
-    # --- Time --- #
-    month + 
-    doy
   
   ## ---------- Data Organization ---------- ##
   
@@ -113,7 +80,7 @@ RFModelAOD <- function (inpath.cm, inpath.rf, outpath, year, start.date, end.dat
   all <- DAT_ORG(all, year)
   all <- subset(all, PM25 >= 0) # Remove negative PM2.5 measurements
   # RF Modeling
-  rf.fit <- RF_MODEL(all, fm)
+  rf.fit <- RF_MODEL(all, formula)
   # Output
   save(rf.fit ,file = file.path(outpath, paste(year, '_RFMODEL_RF.RData', sep = '')))
   
@@ -122,7 +89,7 @@ RFModelAOD <- function (inpath.cm, inpath.rf, outpath, year, start.date, end.dat
   ## -------------------------------------- ##
   
   print('Modeling CV using all AOD')
-  RF_CV(all, fm, fold = 10, times = 1)
+  RF_CV(all, formula, fold = 10, times = 1)
   
   ## ---------- Spatial and Temporal Cross-validation ---------- ##
   
@@ -130,12 +97,12 @@ RFModelAOD <- function (inpath.cm, inpath.rf, outpath, year, start.date, end.dat
   # Randomly removing certain PM2.5 sites to get the CV R2
   print('Spatial CV')
   all$site <- interaction(all$Lat, all$Lon) # Using Lat and Lon to locate a PM2.5 site
-  RF_CV(all, fm, fold = 10, times = 1, by = 'site')
+  RF_CV(all, formula, fold = 10, times = 1, by = 'site')
   
   # Temporal CV
   # Randomly removing certain days of PM2.5 to get the CV R2
   print('Temporal CV')
-  RF_CV(all, fm, fold = 10, times = 1, by = 'doy')
+  RF_CV(all, formula, fold = 10, times = 1, by = 'doy')
   
   ##################################
   # Output screen contents to file #
@@ -231,4 +198,3 @@ RFPredAOD <- function(inpath, inpath.rf, inpath.cm, outpath, year, start.date, e
     
   }
 }
-
