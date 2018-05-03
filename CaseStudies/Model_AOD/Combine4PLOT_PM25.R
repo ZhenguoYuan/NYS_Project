@@ -44,39 +44,49 @@ combinePlot <- function(year, start.date, end.date, inpath, outpath) {
   
 }
 
-
-## ---------- Original AOD ---------- ##
+## ---------- Without AOD ---------- ##
 
 # Paths
-inpath <- file.path('/home/jbi6/terra/MAIAC_GRID_OUTPUT/CaseStudies/MODEL_AOD/Original/PM25_PRED_RFMODEL', as.character(year))
-outpath <- file.path('/home/jbi6/terra/MAIAC_GRID_OUTPUT/CaseStudies/MODEL_AOD/Original/PLOTPM25', as.character(year))
+inpath <- file.path('/home/jbi6/terra/MAIAC_GRID_OUTPUT/CaseStudies/MODEL_AOD/WithoutAOD/PM25_PRED_RFMODEL', as.character(year))
+outpath <- file.path('/home/jbi6/terra/MAIAC_GRID_OUTPUT/CaseStudies/MODEL_AOD/WithoutAOD/PLOTPM25', as.character(year))
 if (!file.exists(outpath)){
   dir.create(outpath, recursive = T)
 }
 
 combinePlot(year, start.date = 1, end.date = 105, inpath, outpath)
 
-## ---------- Gapfilled AOD (Cloud + Snow) ---------- ##
-
-# Paths
-inpath <- file.path('/home/jbi6/terra/MAIAC_GRID_OUTPUT/CaseStudies/MODEL_AOD/Gapfilled/PM25_PRED_RFMODEL', as.character(year))
-outpath <- file.path('/home/jbi6/terra/MAIAC_GRID_OUTPUT/CaseStudies/MODEL_AOD/Gapfilled/PLOTPM25', as.character(year))
-if (!file.exists(outpath)){
-  dir.create(outpath, recursive = T)
-}
-
-combinePlot(year, start.date = 1, end.date = 105, inpath, outpath)
-
-## ---------- Cloud Only Gapfilled AOD ---------- ##
-
-# Paths
-inpath <- file.path('/home/jbi6/terra/MAIAC_GRID_OUTPUT/CaseStudies/MODEL_AOD/CloudOnly/PM25_PRED_RFMODEL', as.character(year))
-outpath <- file.path('/home/jbi6/terra/MAIAC_GRID_OUTPUT/CaseStudies/MODEL_AOD/CloudOnly/PLOTPM25', as.character(year))
-if (!file.exists(outpath)){
-  dir.create(outpath, recursive = T)
-}
-
-combinePlot(year, start.date = 1, end.date = 105, inpath, outpath)
+# ## ---------- Original AOD ---------- ##
+# 
+# # Paths
+# inpath <- file.path('/home/jbi6/terra/MAIAC_GRID_OUTPUT/CaseStudies/MODEL_AOD/Original/PM25_PRED_RFMODEL', as.character(year))
+# outpath <- file.path('/home/jbi6/terra/MAIAC_GRID_OUTPUT/CaseStudies/MODEL_AOD/Original/PLOTPM25', as.character(year))
+# if (!file.exists(outpath)){
+#   dir.create(outpath, recursive = T)
+# }
+# 
+# combinePlot(year, start.date = 1, end.date = 105, inpath, outpath)
+# 
+# ## ---------- Gapfilled AOD (Cloud + Snow) ---------- ##
+# 
+# # Paths
+# inpath <- file.path('/home/jbi6/terra/MAIAC_GRID_OUTPUT/CaseStudies/MODEL_AOD/Gapfilled/PM25_PRED_RFMODEL', as.character(year))
+# outpath <- file.path('/home/jbi6/terra/MAIAC_GRID_OUTPUT/CaseStudies/MODEL_AOD/Gapfilled/PLOTPM25', as.character(year))
+# if (!file.exists(outpath)){
+#   dir.create(outpath, recursive = T)
+# }
+# 
+# combinePlot(year, start.date = 1, end.date = 105, inpath, outpath)
+# 
+# ## ---------- Cloud Only Gapfilled AOD ---------- ##
+# 
+# # Paths
+# inpath <- file.path('/home/jbi6/terra/MAIAC_GRID_OUTPUT/CaseStudies/MODEL_AOD/CloudOnly/PM25_PRED_RFMODEL', as.character(year))
+# outpath <- file.path('/home/jbi6/terra/MAIAC_GRID_OUTPUT/CaseStudies/MODEL_AOD/CloudOnly/PLOTPM25', as.character(year))
+# if (!file.exists(outpath)){
+#   dir.create(outpath, recursive = T)
+# }
+# 
+# combinePlot(year, start.date = 1, end.date = 105, inpath, outpath)
 
 
 
