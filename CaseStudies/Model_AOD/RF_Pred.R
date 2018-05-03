@@ -35,44 +35,44 @@ if (!file.exists(outpath)){
 
 RFPredAOD(inpath, inpath.rf, inpath.cm, outpath, year, start.date = 1, end.date = numdays, tag = 'WithoutAOD') 
 
-## ---------- Original AOD ---------- ##
-
-# Input paths
-inpath <- file.path('/home/jbi6/terra/MAIAC_GRID_OUTPUT/CaseStudies/MODEL_AOD/Original/PM25_FIT_RFMODEL', as.character(year))
-inpath.rf <- file.path('/home/jbi6/terra/MAIAC_GRID_OUTPUT/RF', as.character(year))
-# Output path
-outpath <- file.path('/home/jbi6/terra/MAIAC_GRID_OUTPUT/CaseStudies/MODEL_AOD/Original/PM25_PRED_RFMODEL', as.character(year))
-if (!file.exists(outpath)){
-  dir.create(outpath, recursive = T)
-}
-
-RFPredAOD(inpath, inpath.rf, inpath.cm, outpath, year, start.date = 1, end.date = numdays, tag = 'Original') 
-
-## ---------- Gapfilled AOD (Cloud + Snow) ---------- ##
-
-# Input paths
-inpath <- file.path('/home/jbi6/terra/MAIAC_GRID_OUTPUT/CaseStudies/MODEL_AOD/Gapfilled/PM25_FIT_RFMODEL', as.character(year))
-inpath.rf <- file.path('/home/jbi6/terra/MAIAC_GRID_OUTPUT/RF', as.character(year))
-# Output path
-outpath <- file.path('/home/jbi6/terra/MAIAC_GRID_OUTPUT/CaseStudies/MODEL_AOD/Gapfilled/PM25_PRED_RFMODEL', as.character(year))
-if (!file.exists(outpath)){
-  dir.create(outpath, recursive = T)
-}
-
-RFPredAOD(inpath, inpath.rf, inpath.cm, outpath, year, start.date = 1, end.date = numdays, tag = 'Gapfilled') 
-
-
-## ---------- Cloud Only Gapfilled AOD ---------- ##
-
-# Input paths
-inpath <- file.path('/home/jbi6/terra/MAIAC_GRID_OUTPUT/CaseStudies/MODEL_AOD/CloudOnly/PM25_FIT_RFMODEL', as.character(year))
-inpath.rf <- file.path('/home/jbi6/terra/MAIAC_GRID_OUTPUT/CaseStudies/CloudOnlyAOD/RF_CloudOnly', as.character(year))
-# Output path
-outpath <- file.path('/home/jbi6/terra/MAIAC_GRID_OUTPUT/CaseStudies/MODEL_AOD/CloudOnly/PM25_PRED_RFMODEL', as.character(year))
-if (!file.exists(outpath)){
-  dir.create(outpath, recursive = T)
-}
-
-RFPredAOD(inpath, inpath.rf, inpath.cm, outpath, year, start.date = 1, end.date = numdays, tag = 'Cloud Only') 
+# ## ---------- Original AOD ---------- ##
+# 
+# # Input paths
+# inpath <- file.path('/home/jbi6/terra/MAIAC_GRID_OUTPUT/CaseStudies/MODEL_AOD/Original/PM25_FIT_RFMODEL', as.character(year))
+# inpath.rf <- file.path('/home/jbi6/terra/MAIAC_GRID_OUTPUT/RF', as.character(year))
+# # Output path
+# outpath <- file.path('/home/jbi6/terra/MAIAC_GRID_OUTPUT/CaseStudies/MODEL_AOD/Original/PM25_PRED_RFMODEL', as.character(year))
+# if (!file.exists(outpath)){
+#   dir.create(outpath, recursive = T)
+# }
+# 
+# RFPredAOD(inpath, inpath.rf, inpath.cm, outpath, year, start.date = 1, end.date = numdays, tag = 'Original') 
+# 
+# ## ---------- Gapfilled AOD (Cloud + Snow) ---------- ##
+# 
+# # Input paths
+# inpath <- file.path('/home/jbi6/terra/MAIAC_GRID_OUTPUT/CaseStudies/MODEL_AOD/Gapfilled/PM25_FIT_RFMODEL', as.character(year))
+# inpath.rf <- file.path('/home/jbi6/terra/MAIAC_GRID_OUTPUT/RF', as.character(year))
+# # Output path
+# outpath <- file.path('/home/jbi6/terra/MAIAC_GRID_OUTPUT/CaseStudies/MODEL_AOD/Gapfilled/PM25_PRED_RFMODEL', as.character(year))
+# if (!file.exists(outpath)){
+#   dir.create(outpath, recursive = T)
+# }
+# 
+# RFPredAOD(inpath, inpath.rf, inpath.cm, outpath, year, start.date = 1, end.date = numdays, tag = 'Gapfilled') 
+# 
+# 
+# ## ---------- Cloud Only Gapfilled AOD ---------- ##
+# 
+# # Input paths
+# inpath <- file.path('/home/jbi6/terra/MAIAC_GRID_OUTPUT/CaseStudies/MODEL_AOD/CloudOnly/PM25_FIT_RFMODEL', as.character(year))
+# inpath.rf <- file.path('/home/jbi6/terra/MAIAC_GRID_OUTPUT/CaseStudies/CloudOnlyAOD/RF_CloudOnly', as.character(year))
+# # Output path
+# outpath <- file.path('/home/jbi6/terra/MAIAC_GRID_OUTPUT/CaseStudies/MODEL_AOD/CloudOnly/PM25_PRED_RFMODEL', as.character(year))
+# if (!file.exists(outpath)){
+#   dir.create(outpath, recursive = T)
+# }
+# 
+# RFPredAOD(inpath, inpath.rf, inpath.cm, outpath, year, start.date = 1, end.date = numdays, tag = 'Cloud Only') 
 
 
