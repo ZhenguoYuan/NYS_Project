@@ -85,18 +85,18 @@ gg.taot.diff <- plot2d(data = df.taot.diff, fill = df.taot.diff$Diff,
                        xlim = c(-80, -71.6), ylim = c(40.5, 45.25))
 
 ## Difference (CldSnw - CldOnly) AAOT
-mean(aaot550.combine.cldsnw$AAOT550_Mean - aaot550.combine.cldonly$AAOT550_Mean, na.rm = T)
-quantile(aaot550.combine.cldsnw$AAOT550_Mean - aaot550.combine.cldonly$AAOT550_Mean, 0.25, na.rm = T)
-quantile(aaot550.combine.cldsnw$AAOT550_Mean - aaot550.combine.cldonly$AAOT550_Mean, 0.75, na.rm = T)
+mean(abs(aaot550.combine.cldsnw$AAOT550_Mean - aaot550.combine.cldonly$AAOT550_Mean), na.rm = T)
+quantile(abs(aaot550.combine.cldsnw$AAOT550_Mean - aaot550.combine.cldonly$AAOT550_Mean), 0.25, na.rm = T)
+quantile(abs(aaot550.combine.cldsnw$AAOT550_Mean - aaot550.combine.cldonly$AAOT550_Mean), 0.75, na.rm = T)
 max(abs(aaot550.combine.cldsnw$AAOT550_Mean - aaot550.combine.cldonly$AAOT550_Mean))
-mean(aaot550.combine.cldsnw$AAOT550_Mean)
+mean(abs(aaot550.combine.cldsnw$AAOT550_Mean))
 
 ## Difference (CldSnw - CldOnly) TAOT
-mean(taot550.combine.cldsnw$TAOT550_Mean - taot550.combine.cldonly$TAOT550_Mean, na.rm = T)
-quantile(taot550.combine.cldsnw$TAOT550_Mean - taot550.combine.cldonly$TAOT550_Mean, 0.25, na.rm = T)
-quantile(taot550.combine.cldsnw$TAOT550_Mean - taot550.combine.cldonly$TAOT550_Mean, 0.75, na.rm = T)
+mean(abs(taot550.combine.cldsnw$TAOT550_Mean - taot550.combine.cldonly$TAOT550_Mean), na.rm = T)
+quantile(abs(taot550.combine.cldsnw$TAOT550_Mean - taot550.combine.cldonly$TAOT550_Mean), 0.25, na.rm = T)
+quantile(abs(taot550.combine.cldsnw$TAOT550_Mean - taot550.combine.cldonly$TAOT550_Mean), 0.75, na.rm = T)
 max(abs(taot550.combine.cldsnw$TAOT550_Mean - taot550.combine.cldonly$TAOT550_Mean))
-mean(taot550.combine.cldsnw$TAOT550_Mean)
+mean(abs(taot550.combine.cldsnw$TAOT550_Mean))
 
 ## ---------- Summary Stats & T-Test ---------- ##
 mean(aaot550.combine.cldonly$AAOT550_Mean, na.rm = T)
