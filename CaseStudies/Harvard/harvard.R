@@ -2,7 +2,7 @@
 # Name: harvard.R
 # Author: Jianzhao Bi
 # Description: Harvard Gap-filling (Monthly, Parallel)
-# Date: Mar 12, 2018
+# Date: May 17, 2018
 # ----------------
 
 library(mgcv)
@@ -11,6 +11,7 @@ library(lubridate)
 setwd('/home/jbi6/NYS_Project/CaseStudies/Harvard/')
 
 source('../../src/fun.R')
+source('src/harvard_fun.R')
 
 # Arguments for R script
 Args <- commandArgs()
@@ -31,7 +32,7 @@ this.jobs <- jobs[[cluster.idx]]
 # ----- Parallel ----- #
 # -------------------- #
 
-# ----- Parameters -----
+# ----- Parameters ----- #
 # 12 Months
 month.start <- c(1, 32, 60, 91, 121, 152, 182, 213, 244, 274, 305, 335)
 month.end <- c(31, 59, 90, 120, 151, 181, 212, 243, 273, 304, 334, 365)
@@ -40,6 +41,7 @@ month.end <- c(31, 59, 90, 120, 151, 181, 212, 243, 273, 304, 334, 365)
 inpath <- file.path('/home/jbi6/terra/MAIAC_GRID_OUTPUT/Modeling/PM25_PRED_RFMODEL', as.character(year))
 inpath.rf.aaot <- paste('/home/jbi6/terra/MAIAC_GRID_OUTPUT/RF/', as.character(year), '/aqua550/', sep = '')
 inpath.rf.taot <- paste('/home/jbi6/terra/MAIAC_GRID_OUTPUT/RF/', as.character(year), '/terra550/', sep = '')
+inpath.combine <- paste('/home/jbi6/terra/MAIAC_GRID_OUTPUT/Combine/', as.character(year), sep = '')
 outpath.fit <- file.path('/home/jbi6/terra/MAIAC_GRID_OUTPUT/CaseStudies/Harvard/PM25_FIT_HARVARD', as.character(year))
 if (!file.exists(outpath.fit)) {
   dir.create(outpath.fit,recursive = T)
@@ -51,69 +53,9 @@ if (!file.exists(outpath.pred)) {
 
 # Buffer
 buffer <- 100 # in km
+is.buffer <- T # Whether use the buffer
 
-#------------------------#
-## Cross-validation of Harvard Gap-filling
-harvardCV <- function(all, fold = 10, times = 1) {
-  # fold: how many parts the data are divided into, in which one of this parts is used for testing, and the remaining are used for training
-  # times: how many times the CV should run
-  
-  print('============== CV Started ==============')
-  
-  cv.r2 <- c()
-  for (i_cv in 1 : times) {
-    
-    ## ----- Split ----- ##
-    
-    # Randonly reorder the sequence
-    idx <- 1 : nrow(all)
-    idx <- sample(idx, size = length(idx), replace = F)
-    # Splitting the dataset by the number of fold
-    groups <- split(1 : length(idx), 1 : fold)
-    
-    # For each fold
-    for (i.fold in 1 : fold) {
-      
-      # ----- Allocation ----- #
-      dat.fit.train <- all[-unlist(groups[i.fold]), ]
-      dat.fit.test <- all[unlist(groups[i.fold]), ]
-      
-      y <- dat.fit.test$sqrtPM25_Pred
-      dat.fit.test$sqrtPM25_Pred <- NULL
-      
-      ## ----- CV ----- ##
-      harvmod <- gam(sqrtPM25_Pred ~ sqrtDailyMean + s(X_Lon, Y_Lat, k = 10), data = dat.fit.train)
-      sqrtPred <- predict(harvmod, dat.fit.test)
-      y.pred <- sqrtPred * sqrtPred
-      cv.r2[i.fold + fold * (i_cv - 1)] <- cor(x = y, y = y.pred, use = "complete.obs") * cor(x = y, y = y.pred, use = "complete.obs")
-      
-      print(paste('CV R2 ', as.character(i_cv), '_',as.character(i.fold), ': ', as.character(cv.r2[i.fold + fold * (i_cv - 1)]), sep = ''))
-      
-      gc()
-      
-    }
-    
-  }
-  
-  print(paste('Mean CV R2:', as.character(mean(cv.r2, na.rm = T))))
-  print('============== CV Completed ==============')
-  
-}
-#------------------------#
-# Calculate each row's buffer mean
-bufferMean <- function(df.row, dat, buffer) {
-  ### df.row - a row of the input data frame
-  ### dat - the data including original MAIAC AOD
-  # X and Y
-  x.tmp <- df.row['X_Lon']
-  y.tmp <- df.row['Y_Lat']
-  # Mean calculation
-  dat.tmp <- subset(dat, sqrt((X_Lon - x.tmp)^2 + (Y_Lat - y.tmp)^2) <= buffer)
-  DailyMean.tmp <- mean(dat.tmp$PM25_Pred, na.rm = T) # Using non-gapfilling data to calculate daily mean
-  
-  return(DailyMean.tmp)
-}
-
+# ----- Run ----- #
 
 for (m in this.jobs) { # For a month
   
@@ -132,6 +74,8 @@ for (m in this.jobs) { # For a month
     
     if (file.exists(pm25.filename)) {
       
+      # --- Load Data --- #
+      
       dat <- read.csv(file = pm25.filename, stringsAsFactors = F)
       
       # Load the RF gap-filling data set to get the gap-filling tag
@@ -141,45 +85,47 @@ for (m in this.jobs) { # For a month
       load(file.path(inpath.rf.taot, paste(as.character(year), sprintf('%03d', i.doy), '_RF.RData', sep = '')))
       taot <- rf.result
       gapfill.tag.taot <- taot$Gapfill_tag_TAOT550
-      gapfill.tag <- gapfill.tag.aaot | gapfill.tag.taot
+      gapfill.tag <- gapfill.tag.aaot | gapfill.tag.taot # Using "|" because the PM2.5 will be estimated by Harvard model as long as it predicted by gap-filled AAOT or TAOT
       dat.tag <- data.frame(ID = aaot$ID, gapfill.tag = gapfill.tag) # Indicating whether this PM2.5 is estimated from original AOD
+      
+      # Load the combined dataset
+      load(file.path(inpath.combine, paste(as.character(year), sprintf('%03d', i.doy), '_combine.RData', sep = '')))
+      combine <- subset(combine, select = c(ID, year, doy, Y_Lat, X_Lon, PM25))
       
       # merge PM2.5 prediction and the tag
       dat.daily <- merge(dat, dat.tag, by = c('ID'), all = F)
+      dat.daily <- merge(dat.daily, combine, by = c('ID'), all.x = T)
       
-      # Add time
+      # Add month
       dat.daily$month <- m
-      dat.daily$doy <- i.doy
       
-      # Lat/Lon to KM
-      xy <- xy.latlon(Lat = dat.daily$Lat, Long = dat.daily$Lon)
-      dat.daily <- cbind(dat.daily, xy)
+      # --- Daily Mean --- #
+      # Select EPA observations
+      dat.daily.epa <- subset(dat.daily, !is.na(PM25)) # Select the PM2.5 values predicted by original AOD
+      dat.daily.epa <- subset(dat.daily.epa, select = c(ID, X_Lon, Y_Lat, PM25))
+      print(paste('nrow :', as.character(nrow(dat.daily.epa))))
       
-      # Daily Mean
-      # for (i.mean in 1 : nrow(dat.daily)){
-      #   x.tmp <- dat.daily$X_Lon[i.mean]
-      #   y.tmp <- dat.daily$Y_Lat[i.mean]
-      #   DailyMean.tmp <- mean(dat.daily[dat.daily$gapfill.tag == F & sqrt((dat.daily$X_Lon - x.tmp)^2 + (dat.daily$Y_Lat - y.tmp)^2) <= buffer, ]$PM25_Pred, 
-      #                         na.rm = T) # Using non-gapfilling data to calculate daily mean
-      #   dat.daily$DailyMean[i.mean] <- DailyMean.tmp
-      #   dat.daily$sqrtDailyMean[i.mean] <- sqrt(DailyMean.tmp)
-      # }
-      dat.daily.original <- subset(dat.daily, gapfill.tag == F) # Select the PM2.5 values predicted by original AOD
-      print(paste('nrow :', as.character(nrow(dat.daily.original))))
-      if (nrow(dat.daily.original) != 0) {
-        # Sampling the data
-        if (nrow(dat.daily.original) > 10000){
-          idx <- sample(1 : nrow(dat.daily.original), 10000)
-          dat.daily.original <- dat.daily.original[idx, ]
+      if (is.buffer) {
+        # Calculate Daily EPA station mean within the buffer
+        if (nrow(dat.daily.epa) != 0) {
+          DailyEPAMean <- apply(dat.daily, 1, FUN = bufferMean, dat.daily.epa, buffer)
+          dat.daily$DailyEPAMean <- DailyEPAMean
+          dat.daily$sqrtDailyEPAMean <- sqrt(DailyEPAMean)
+        } else {
+          dat.daily$DailyEPAMean <- NA
+          dat.daily$sqrtDailyEPAMean <- NA
         }
-        DailyMean <- apply(dat.daily, 1, FUN = bufferMean, dat.daily.original, buffer)
-        dat.daily$DailyMean <- DailyMean
-        dat.daily$sqrtDailyMean <- sqrt(DailyMean)
       } else {
-        dat.daily$DailyMean <- NA
-        dat.daily$sqrtDailyMean <- NA
+        # Calculate Daily EPA station regional mean
+        if (nrow(dat.daily.epa) != 0) {
+          DailyEPAMean <- mean(dat.daily.epa$PM25, na.rm = T)
+          dat.daily$DailyEPAMean <- DailyEPAMean
+          dat.daily$sqrtDailyEPAMean <- sqrt(DailyEPAMean)
+        } else {
+          dat.daily$DailyEPAMean <- NA
+          dat.daily$sqrtDailyEPAMean <- NA
+        }
       }
-
       
       # Sqrt PM2.5
       dat.daily$sqrtPM25_Pred <- sqrt(dat.daily$PM25_Pred)
@@ -198,7 +144,7 @@ for (m in this.jobs) { # For a month
   
   # --- Harvard Gap-filling --- #
   
-  harvmod <- gam(sqrtPM25_Pred ~ sqrtDailyMean + s(X_Lon, Y_Lat, k = 10), data = dat.monthly.fit)
+  harvmod <- gam(sqrtPM25_Pred ~ sqrtDailyEPAMean + s(X_Lon, Y_Lat), data = dat.monthly.fit)
   sqrtPred <- predict(harvmod, dat.monthly.pred)
   Pred <- sqrtPred * sqrtPred
   
@@ -236,22 +182,17 @@ for (m in this.jobs) { # For a month
   
 }
 
-
 # # ----- Plot ----- #
-# shp.name <- '~/Google Drive/Projects/Codes/Public/shp/cb_2016_us_state_20m/cb_2016_us_state_20m.shp'
-# myshp <- readShapePoly(shp.name)
+# library(ggplot2)
+# 
 # jet.colors <- colorRampPalette(c("#00007F", "blue", "#007FFF", "cyan", "#7FFF7F", "yellow", "#FF7F00", "red", "#7F0000"))
 # 
-# ## Harvard Gap-filling
-# dat.ori <- dat.final[dat.final$harvard.fill.tag == 0,]
-# pp.ori <- plot2d(data = dat.ori, fill = dat.ori$PM25_Pred, colorbar = jet.colors, shp = myshp)
+# gg <- ggplot() +
+#   geom_tile(data = dat.monthly.fit, aes(Lon, Lat, fill = dat.monthly.fit$PM25_Pred, width = 0.014, height = 0.014), alpha = 1) +
+#   scale_fill_gradientn(colours = jet.colors(100), limits = c(0,10), oob = scales::squish, na.value = NA)
 # 
-# dat.gap <- dat.final[dat.final$harvard.fill.tag == 1,]
-# pp.gap <- plot2d(data = dat.gap, fill = dat.gap$PM25_Pred, colorbar = jet.colors, shp = myshp)
-# 
-# pp.final <- plot2d(data = dat.final, fill = dat.final$PM25_Pred, colorbar = jet.colors, shp = myshp)
-# 
-# ## RF Gap-filling
-# pp.rf <- plot2d(data = dat.rf, fill = dat.rf$PM25_Pred, colorbar = jet.colors, shp = myshp, colorbar_limits = c(5, 15))
+# gg.new <- ggplot() +
+#   geom_tile(data = dat.monthly, aes(Lon, Lat, fill = PM25_Pred_Harvard, width = 0.014, height = 0.014), alpha = 1) +
+#   scale_fill_gradientn(colours = jet.colors(100), limits = c(0,10), oob = scales::squish, na.value = 'white')
 
 
