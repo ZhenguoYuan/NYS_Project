@@ -101,6 +101,39 @@ quantile(diff.snow.stat.abs, 0.25)
 quantile(diff.snow.stat.abs, 0.75)
 max(diff.snow.stat.abs)
 
+# ---------- Difference (Full - Original AOD) ---------- #
+# Snow Season
+# Full
+load(paste('data/Gapfilled/pm25_combine_plot.RData', sep = ''))
+full <- pm25_combine_plot
+full <- cutByShp(shp.name = shp.name, full)
+# Original AOD
+load(paste('data/Original/pm25_combine_plot.RData', sep = ''))
+original <- pm25_combine_plot
+original <- cutByShp(shp.name = shp.name, original)
+
+diff.ori.df <- data.frame(Lat = full$Lat, Lon = full$Lon, diff = full$PM25_Pred_Avg - original$PM25_Pred_Avg)
+
+gg.diff.ori <- plot2d(data = diff.ori.df, fill = diff.ori.df$diff,
+                        colorbar = diff.colors.bias, colorbar_limits = c(-1.5, 0.5),
+                        shp = myshp, legend_name = expression(paste(mu, g/m^3)), title = 'Full - Original PM2.5',
+                        xlim = xlim, ylim = ylim, hjust = 0.20)
+
+# Stat (Cloud+Snow - Cloud Only) (no ABS)
+diff.ori.stat <- full$PM25_Pred_Avg - original$PM25_Pred_Avg
+mean(diff.ori.stat)
+quantile(diff.ori.stat, 0.25)
+quantile(diff.ori.stat, 0.75)
+max(diff.ori.stat)
+min(diff.ori.stat)
+
+# Stat (Cloud+Snow - Cloud Only) (ABS)
+diff.ori.stat.abs <- abs(diff.ori.stat)
+mean(diff.ori.stat.abs)
+quantile(diff.ori.stat.abs, 0.25)
+quantile(diff.ori.stat.abs, 0.75)
+max(diff.ori.stat.abs)
+
 
 # # ---------- Population Weighted Difference (Cloud+Snow - Cloud Only) ---------- #
 #
