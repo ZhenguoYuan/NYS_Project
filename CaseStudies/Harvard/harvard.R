@@ -53,7 +53,7 @@ if (!file.exists(outpath.pred)) {
 
 # Buffer
 buffer <- 100 # in km
-is.buffer <- T # Whether use the buffer
+is.buffer <- F # Whether use the buffer
 
 # ----- Run ----- #
 
