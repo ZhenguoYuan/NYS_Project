@@ -18,7 +18,7 @@ addpath('../../Lima_Project/MAIAC/src/');
 
 %% Parameters
 
-inpath_main = '/home/jbi6/aura/NorthAmerica_2000-2016/';
+inpath_main = '/aura/MAIAC_NA/';
 outpath_main = '/home/jbi6/aura/NYS_MAIAC_CSV/';
 
 aerotype = {'AAOT', 'TAOT'};
