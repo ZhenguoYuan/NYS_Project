@@ -17,18 +17,18 @@ RF_Gapfill <- function(dat.fit, dat.pred, type, outpath, formula) {
     dat.fit$Cloud_Frac_Day_New <- dat.fit$Cloud_Frac_Day_Terra
     dat.fit$Snow_Cover_New <- dat.fit$Snow_Cover_Terra
     # Predicting data
-    dat.pred$AOT550_New <- dat.fit$AOD550_TAOT
-    dat.pred$Cloud_Frac_Day_New <- dat.fit$Cloud_Frac_Day_Terra
-    dat.pred$Snow_Cover_New <- dat.fit$Snow_Cover_Terra
+    dat.pred$AOT550_New <- dat.pred$AOD550_TAOT
+    dat.pred$Cloud_Frac_Day_New <- dat.pred$Cloud_Frac_Day_Terra
+    dat.pred$Snow_Cover_New <- dat.pred$Snow_Cover_Terra
   } else if (type == 'aqua550') {
     # Fitting data
     dat.fit$AOT550_New <- dat.fit$AOD550_AAOT
     dat.fit$Cloud_Frac_Day_New <- dat.fit$Cloud_Frac_Day_Aqua
     dat.fit$Snow_Cover_New <- dat.fit$Snow_Cover_Aqua
     # Predicting data
-    dat.pred$AOT550_New <- dat.fit$AOD550_AAOT
-    dat.pred$Cloud_Frac_Day_New <- dat.fit$Cloud_Frac_Day_Aqua
-    dat.pred$Snow_Cover_New <- dat.fit$Snow_Cover_Aqua
+    dat.pred$AOT550_New <- dat.pred$AOD550_AAOT
+    dat.pred$Cloud_Frac_Day_New <- dat.pred$Cloud_Frac_Day_Aqua
+    dat.pred$Snow_Cover_New <- dat.pred$Snow_Cover_Aqua
   } else {
     stop('AOD type does not exist!')
   }
