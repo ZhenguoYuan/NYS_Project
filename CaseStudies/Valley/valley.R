@@ -21,7 +21,9 @@ year <- 2015
 
 # Read shp
 myshp <- readShapePoly('../../../Public/shp/cb_2016_us_state_20m/cb_2016_us_state_20m.shp')
+myshp.nys <- subset(myshp, myshp@data$NAME == 'New York')
 myshp <- fortify(myshp)
+myshp.nys <- fortify(myshp.nys)
 
 # colorbar
 # define jet colormap
@@ -43,7 +45,7 @@ plot2d.dem <- function (data, colorbar, colorbar_limits = NULL, shp, legend_name
   gg <- ggplot() +
     geom_tile(data = data, aes(Lon, Lat, fill = PM25_Pred_Avg, width = 0.014, height = 0.014), alpha = 1) +
     scale_fill_gradientn(colours = colorbar, limits = colorbar_limits, oob = scales::squish) + # scales::squish is forcing all color display for points outside the legend range
-    geom_polygon(data = shp, aes(x = long, y = lat, group = group), color = "black", fill = NA) +
+    geom_polygon(data = shp, aes(x = long, y = lat, group = group), color = 'black', fill = NA) +
     labs(fill = legend_name) + ggtitle(title) + coord_fixed(xlim = xlim,  ylim = ylim, ratio = 1) + # Using coord_fixed to realize true zoom in!
     xlab('Longitude (degree)') + ylab('Latitude (degree)') + 
     scalebar(x.min = min(xlim), x.max = max(xlim), y.min = min(ylim), y.max = max(ylim), dist = 3, dd2km = TRUE, st.size = 4, model = 'WGS84', location = 'bottomleft') +
@@ -51,7 +53,7 @@ plot2d.dem <- function (data, colorbar, colorbar_limits = NULL, shp, legend_name
           legend.text = element_text(size = rel(1)), axis.title = element_text(size = rel(1.2)), axis.text = element_text(size = rel(1)))
   
   #gg <- gg + geom_contour(data = dem, aes(x = x, y = y, z = var1.pred, colour = ..level..), bin = 8)#, size = 0.2, alpha = 0.7)
-  gg <- gg + geom_contour(data = dem, aes(x = x, y = y, z = var1.pred), binwidth = 140, colour = 'black')
+  gg <- gg + geom_contour(data = dem, aes(x = x, y = y, z = var1.pred), binwidth = 140, colour = 'white')
   #gg <- direct.label(gg, list("far.from.others.borders", "calc.boxes", "enlarge.box", hjust = 1, vjust = 1, box.color = NA, fill = "transparent", "draw.rects"))
   
   # colours = colorbar(100)
@@ -75,8 +77,8 @@ plot2d.dem <- function (data, colorbar, colorbar_limits = NULL, shp, legend_name
 load('data/dem.RData')
 
 # Plot PM2.5 distribution with DEM
-#dem.color <- rev(brewer.pal(n = 9, name = "YlGnBu"))
-dem.color <- brewer.pal(n = 9, name = "YlGnBu")
+dem.color <- rev(brewer.pal(n = 9, name = "YlGnBu"))
+#dem.color <- brewer.pal(n = 9, name = "YlGnBu")
 gg.list <- plot2d.dem(data = pm25_combine_plot_winter,
                       colorbar = dem.color, colorbar_limits = c(5.5, 8),
                       shp = myshp, legend_name = expression(paste(mu, g/m^3)), title = '', dem.reg,
@@ -86,6 +88,15 @@ gg.list <- plot2d.dem(data = pm25_combine_plot_winter,
 gg.list$gg
 # Google map with contours
 gg.list$gg.map
+
+# Plot the Map of NYS highlighting the region of valleys
+valley.area <- data.frame(x = c(-75.5, -75.5, -75.15, -75.15), y = c(42.75, 42.375, 42.375, 42.75))
+gg.area <- ggplot() + geom_polygon(data = myshp.nys, aes(x = long, y = lat, group = group), color = 'grey', fill = 'grey') +
+  geom_polygon(data = valley.area, aes(x = x, y = y), color = 'blue', fill = 'blue', alpha = 0.5) +
+  coord_fixed(ratio = 1.3) +
+  theme(panel.grid.minor = element_blank(), panel.background = element_blank(), axis.line = element_blank(),
+        axis.title = element_blank(), axis.ticks = element_blank(), axis.text = element_blank())
+ggsave('img/valley_area.jpg', plot = gg.area, width = 5)
 
 # ---------- PLOT Population Density ---------- #
 
