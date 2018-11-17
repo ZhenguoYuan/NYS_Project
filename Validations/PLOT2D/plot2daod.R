@@ -106,15 +106,15 @@ gg.taot.gap <- plot2d(data = taot550.combine.gap, fill = taot550.combine.gap$TAO
 ## Difference (Gap - Ori) AAOT
 df.aaot.diff <- data.frame(Lat = aaot550.combine.gap$Lat, Lon = aaot550.combine.gap$Lon, Diff = aaot550.combine.gap$AAOT550_Mean_Gap - aaot550.combine.ori$AAOT550_Mean_Ori)
 gg.aaot.diff <- plot2d(data = df.aaot.diff, fill = df.aaot.diff$Diff, 
-                      colorbar = diff.colors, colorbar_limits = c(-0.2, 0.2), 
-                      shp = myshp, legend_name = 'AOD', title = '(e) Aqua AOD Differences',
+                      colorbar = diff.colors, colorbar_limits = c(0, 0.2), 
+                      shp = myshp, legend_name = 'Diff', title = '(e) Aqua AOD Differences',
                       xlim = xlim, ylim = ylim)
 
 ## Difference (Gap - Ori) TAOT
 df.taot.diff <- data.frame(Lat = taot550.combine.gap$Lat, Lon = taot550.combine.gap$Lon, Diff = taot550.combine.gap$TAOT550_Mean_Gap - taot550.combine.ori$TAOT550_Mean_Ori)
 gg.taot.diff <- plot2d(data = df.taot.diff, fill = df.taot.diff$Diff, 
-                       colorbar = diff.colors, colorbar_limits = c(-0.2, 0.2), 
-                       shp = myshp, legend_name = 'AOD', title = '(f) Terra AOD Differences',
+                       colorbar = diff.colors, colorbar_limits = c(0, 0.2), 
+                       shp = myshp, legend_name = 'Diff', title = '(f) Terra AOD Differences',
                        xlim = xlim, ylim = ylim)
 
 ## ---------- Summary Stats & T-Test ---------- ##

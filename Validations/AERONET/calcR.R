@@ -1,4 +1,4 @@
-setwd('~/Google Drive/MAIAC Project/Codes/NYS_Project/Validations/AERONET/')
+setwd('~/Google Drive/Projects/Codes/NYS_Project/Validations/AERONET/')
 library(ggplot2)
 
 load('data/mi_combine_aero.RData')
