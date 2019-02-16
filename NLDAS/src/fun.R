@@ -118,6 +118,7 @@ hourly.to.daily <- function(time.range = 1 : 24, inpath_a, files.daily.a, inpath
     # Combine hourly data into a 3-D array
     if (i == 1){
       final.array <- array(dim = c(dim(nldas.df), length(files.daily.a)))
+      final.array[, , i] <- as.matrix(nldas.df)
       col.names <- colnames(nldas.df)
     } else {
       final.array[, , i] <- as.matrix(nldas.df)
