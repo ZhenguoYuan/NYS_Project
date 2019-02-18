@@ -22,7 +22,7 @@ narr.daily <- function (file.prefix, var.name, year, inpath, outpath, new.loc, t
   var <- ncvar_get(nc.file, varid = var.name)
   nc_close(nc.file)
   # Post-processing
-  time <- as.POSIXlt(time * 3600, origin = '1800-01-01 00:00') # Converting "hours since date" to the date-time object
+  time <- as.POSIXlt(time * 3600, origin = '1800-01-01 00:00', tz = 'GMT') # Converting "hours since date" to the date-time object
   lon.vec <- to.vec(lon) # To vector
   lat.vec <- to.vec(lat) # To vector
   doys <- time$yday + 1 # day of year
