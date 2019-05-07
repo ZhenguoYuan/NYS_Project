@@ -10,8 +10,8 @@ source('src/fun.R')
 source('../src/fun.R')
 
 ## Input/Output
-inpath <- '/home/jbi6/terra/MAIAC_GRID_OUTPUT/'
-outpath <- '/home/jbi6/terra/MAIAC_GRID_OUTPUT/Combine/'
+inpath <- '/home/jbi6/envi/NYS_Output/MAIAC_GRID_OUTPUT'
+outpath <- '/home/jbi6/envi/NYS_Output/MAIAC_GRID_OUTPUT/Combine/'
 
 # Arguments for R script
 Args <- commandArgs()
