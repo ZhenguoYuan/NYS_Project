@@ -20,8 +20,8 @@ Args <- commandArgs()
 # Year
 year <- Args[6] # 6th argument is the first custom argument
 
-inpath <- paste('/home/jbi6/terra/MAIAC_GRID_OUTPUT/Combine/', as.character(year), sep = '')
-outpath <- paste('/home/jbi6/terra/MAIAC_GRID_OUTPUT/RF/', as.character(year), sep = '')
+inpath <- paste('/home/jbi6/envi/NYS_Output/MAIAC_GRID_OUTPUT/Combine/', as.character(year), sep = '')
+outpath <- paste('/home/jbi6/envi/NYS_Output/MAIAC_GRID_OUTPUT/RF/', as.character(year), sep = '')
 
 # Formula
 fm <- AOT550_New ~ Cloud_Frac_Day_New + Snow_Cover_New + DEM +
