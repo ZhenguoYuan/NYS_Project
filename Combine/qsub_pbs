@@ -1,0 +1,7 @@
+#!/bin/sh
+#PBS -N Combine
+#PBS -j oe
+#PBS -o /home/jbi6/log
+
+cd /home/jbi6/NYS_Project/Combine
+Rscript combine.R $YEAR $CI $CLUST
