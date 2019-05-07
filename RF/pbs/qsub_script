@@ -1,0 +1,7 @@
+#!/bin/sh
+#PBS -N GAPFILL
+#PBS -o /home/jbi6/log
+#PBS -e /home/jbi6/log
+
+cd /home/jbi6/NYS_Project/RF
+Rscript rf.R $YEAR $CI $CLUST
