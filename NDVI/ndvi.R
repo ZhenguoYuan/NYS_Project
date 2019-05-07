@@ -23,8 +23,8 @@ ndays <- numOfYear(year)
 # MAIAC grid
 new.loc <- read.csv('../MAIAC_GRID/output/maiac_grid.csv', stringsAsFactors = F)
 # Paths
-in.path <- file.path('/home/jbi6/terra/NDVI', as.character(year))
-out.path <- file.path('/home/jbi6/terra/MAIAC_GRID_OUTPUT/NDVI', as.character(year))
+in.path <- file.path('/home/jbi6/envi/NYS_Output/NDVI_ORI', as.character(year))
+out.path <- file.path('/home/jbi6/envi/NYS_Output/MAIAC_GRID_OUTPUT/NDVI', as.character(year))
 if (!file.exists(out.path)) {
   dir.create(out.path, recursive = T)
 }
