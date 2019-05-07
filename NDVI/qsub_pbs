@@ -1,0 +1,8 @@
+#!/bin/sh
+#PBS -N $NAME
+#PBS -o /home/jbi6/log
+#PBS -e /home/jbi6/log
+#PBS -k oe
+
+cd /home/jbi6/NYS_Project/NDVI
+Rscript ndvi.R $YEAR
