@@ -57,7 +57,7 @@ RF_Gapfill <- function(dat.fit, dat.pred, type, outpath, formula) {
       ## ---- RF Fitting ---- ##
       ptm <- proc.time()
       
-      rf.fit <- ranger(formula = formula, data = dat.fit.sub, num.trees = 200, importance = 'impurity', num.threads = 15, seed = 1118)
+      rf.fit <- ranger(formula = formula, data = dat.fit.sub, num.trees = 100, importance = 'impurity', num.threads = 15, seed = 1118)
       
       print(proc.time() - ptm)
       
@@ -84,7 +84,7 @@ RF_Gapfill <- function(dat.fit, dat.pred, type, outpath, formula) {
       dat.pred.nomiss <- dat.pred[!pred.miss.idx, ]
       
       # Prediction
-      AOD550_pred <- predict(rf.fit, dat.pred.nomiss, num.trees = 15)
+      AOD550_pred <- predict(rf.fit, dat.pred.nomiss, num.threads = 15)
       dat.pred.nomiss$AOT550_New <- AOD550_pred$predictions
       dat.pred.miss$AOT550_New <- NA
       dat.pred <- rbind(dat.pred.nomiss, dat.pred.miss)
