@@ -10,7 +10,7 @@ library(ranger)
 setwd('/home/jbi6/NYS_Project/RF/')
 
 source('../src/fun.R') # Load interp functions
-source('src/fun.R') # Load RF's function
+source('src/fun_ranger.R') # Load RF's function
 
 # Year
 year <- 2002
