@@ -13,7 +13,7 @@ source('../src/fun.R') # Load interp functions
 source('src/fun_ranger.R') # Load RF's function
 
 # Years
-for (year in 2004 : 2005) {
+for (year in 2006 : 2016) {
   
   inpath <- paste('/home/jbi6/envi/NYS_Output/MAIAC_GRID_OUTPUT/Combine/', as.character(year), sep = '')
   outpath <- paste('/home/jbi6/envi/NYS_Output/MAIAC_GRID_OUTPUT/RF/', as.character(year), sep = '')
