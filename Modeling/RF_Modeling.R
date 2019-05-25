@@ -24,9 +24,9 @@ Args <- commandArgs()
 # Year
 year <- Args[6] # 6th argument is the first custom argument
 numdays <- numOfYear(as.numeric(year))
-inpath.rf <- file.path('/home/jbi6/terra/MAIAC_GRID_OUTPUT/RF', as.character(year))
-inpath.cm <- file.path('/home/jbi6/terra/MAIAC_GRID_OUTPUT/Combine', as.character(year))
-outpath <- file.path('/home/jbi6/terra/MAIAC_GRID_OUTPUT/Modeling/PM25_FIT_RFMODEL', as.character(year))
+inpath.rf <- file.path('/home/jbi6/envi/NYS_Output/MAIAC_GRID_OUTPUT/RF', as.character(year))
+inpath.cm <- file.path('/home/jbi6/envi/NYS_Output/MAIAC_GRID_OUTPUT/Combine', as.character(year))
+outpath <- file.path('/home/jbi6/envi/NYS_Output/MAIAC_GRID_OUTPUT/Modeling/PM25_FIT_RFMODEL', as.character(year))
 if (!file.exists(outpath)){
   dir.create(outpath, recursive = T)
 }
@@ -34,7 +34,7 @@ if (!file.exists(outpath)){
 # ---------- Formula ---------- ##
 fm <- PM25 ~ 
   # --- AOD --- #
-  AAOT550_New + 
+  # AAOT550_New + 
   TAOT550_New +
   # --- Meteorology --- #
   # AIR_NARR +
@@ -76,18 +76,19 @@ if (!file.exists(file.path(outpath, paste(year, '_COMBINE_RF.RData', sep = '')))
     print(i_day)
     
     # File paths
-    file.rf.aqua <- file.path(inpath.rf, 'aqua550', paste(year, sprintf('%03d', i_day), '_RF.RData', sep = ''))
+    # file.rf.aqua <- file.path(inpath.rf, 'aqua550', paste(year, sprintf('%03d', i_day), '_RF.RData', sep = '')) # No Aqua
     file.rf.terra <- file.path(inpath.rf, 'terra550', paste(year, sprintf('%03d', i_day), '_RF.RData', sep = ''))
     file.cm <- file.path(inpath.cm, paste(year, sprintf('%03d', i_day), '_combine.RData', sep = ''))
     
     # Check if RF and Combine files exist
-    if (file.exists(file.rf.aqua) & file.exists(file.rf.terra) & file.exists(file.cm)) {
+    # if (file.exists(file.rf.aqua) & file.exists(file.rf.terra) & file.exists(file.cm)) { # No Aqua
+    if (file.exists(file.rf.terra) & file.exists(file.cm)) {
       
       # Gap-filled Aqua AOD
-      load(file.rf.aqua)
-      rf.result$Lat <- NULL
-      rf.result$Lon <- NULL
-      rf.result.aqua <- rf.result
+      # load(file.rf.aqua)
+      # rf.result$Lat <- NULL
+      # rf.result$Lon <- NULL
+      # rf.result.aqua <- rf.result
       # Gap-filled Terra AOD
       load(file.rf.terra)
       rf.result$Lat <- NULL
@@ -97,10 +98,11 @@ if (!file.exists(file.path(outpath, paste(year, '_COMBINE_RF.RData', sep = '')))
       load(file.cm)
       
       # Combining RF and combine
-      dat.tmp <- merge(combine, rf.result.aqua, by = c('ID'), all = T)
-      dat.tmp <- merge(dat.tmp, rf.result.terra, by = c('ID'), all = T)
+      # dat.tmp <- merge(combine, rf.result.aqua, by = c('ID'), all = T)
+      dat.tmp <- merge(combine, rf.result.terra, by = c('ID'), all = T)
       # Removing missing AOD & PM2.5
-      dat.tmp <- subset(dat.tmp, !is.na(AAOT550_New) & !is.na(TAOT550_New) & !is.na(PM25))
+      # dat.tmp <- subset(dat.tmp, !is.na(AAOT550_New) & !is.na(TAOT550_New) & !is.na(PM25))
+      dat.tmp <- subset(dat.tmp, !is.na(TAOT550_New) & !is.na(PM25))
       
       # Check if all AOD are missing
       if (nrow(dat.tmp) > 1) { 
@@ -150,15 +152,15 @@ y.list.all <- RF_CV(all, fm, fold = 10, times = 1)
 # Using only original AOD or gap-filled AOD to predict PM2.5 and to calculate CV R2
 # This process will not include the grid cells with only gap-filled AAOTor only gap-filled TAOT!
 
-# Original AOD
-print('Modeling CV using original AOD')
-all_ori <- subset(all, Gapfill_tag_AAOT550 == 0 & Gapfill_tag_TAOT550 == 0) # Only select grid cells with original AOTs
-y.list.ori <- RF_CV(all_ori, fm, fold = 10, times = 1)
-
-# Gap-filled AOD
-print('Modeling CV using gap-filled AOD')
-all_gap <- subset(all, Gapfill_tag_AAOT550 == 1 & Gapfill_tag_TAOT550 == 1) # Only select grid cells with gap-filled AAOT and TAOT
-y.list.gap <- RF_CV(all_gap, fm, fold = 10, times = 1)
+# # Original AOD
+# print('Modeling CV using original AOD')
+# all_ori <- subset(all, Gapfill_tag_AAOT550 == 0 & Gapfill_tag_TAOT550 == 0) # Only select grid cells with original AOTs
+# y.list.ori <- RF_CV(all_ori, fm, fold = 10, times = 1)
+# 
+# # Gap-filled AOD
+# print('Modeling CV using gap-filled AOD')
+# all_gap <- subset(all, Gapfill_tag_AAOT550 == 1 & Gapfill_tag_TAOT550 == 1) # Only select grid cells with gap-filled AAOT and TAOT
+# y.list.gap <- RF_CV(all_gap, fm, fold = 10, times = 1)
 
 ## ---------- Spatial and Temporal Cross-validation ---------- ##
 
@@ -174,7 +176,8 @@ print('Temporal CV')
 y.list.tem <- RF_CV(all, fm, fold = 10, times = 1, by = 'doy')
 
 ## ---------- Save CV Results ---------- ##
-save(y.list.all, y.list.ori, y.list.gap, y.list.spa, y.list.tem, file = file.path(outpath, paste(year, '_CV_RF.RData', sep = '')))
+# save(y.list.all, y.list.ori, y.list.gap, y.list.spa, y.list.tem, file = file.path(outpath, paste(year, '_CV_RF.RData', sep = '')))
+save(y.list.all, y.list.spa, y.list.tem, file = file.path(outpath, paste(year, '_CV_RF.RData', sep = '')))
 
 ##################################
 # Output screen contents to file #
