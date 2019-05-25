@@ -1,7 +1,0 @@
-#!/bin/sh
-#PBS -N RF_Modeling
-#PBS -o /home/jbi6/log
-#PBS -e /home/jbi6/log
-
-cd /home/jbi6/NYS_Project/Modeling
-Rscript model.R $YEAR
