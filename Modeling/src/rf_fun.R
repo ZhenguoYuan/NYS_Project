@@ -5,14 +5,14 @@
 # 3/7/2018
 #----------------------------
 
-library(MASS)
-library(mgcv)
-library(pls)
+# library(MASS)
+# library(mgcv)
+# library(pls)
 library(lubridate)
 library(randomForest)
 library(sp)
-library(caret)
-library(VSURF)
+# library(caret)
+# library(VSURF)
 library(doSNOW)
 
 ## ------------------------
