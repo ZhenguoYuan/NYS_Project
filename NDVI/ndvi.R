@@ -8,13 +8,16 @@ library(ggplot2)
 library(ggmap)
 library(maptools)
 library(RColorBrewer)
+library(foreach)
+library(doMC)
+registerDoMC(11)
 
 setwd('/home/jbi6/NYS_Project/NDVI/')
 
 source('../src/latlon.R')
 source('../src/fun.R')
 
-for (year in 2002 : 2012) {
+foreach (year = 2002 : 2012) %dopar% {
   
   ndays <- numOfYear(year)
   
