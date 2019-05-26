@@ -2,7 +2,7 @@
 
 clusternum=10
 
-for((year=2013;year<=2014;year++))
+for((year=2002;year<=2016;year++))
 do
     for((ci=1;ci<=$clusternum;ci++))
     do
