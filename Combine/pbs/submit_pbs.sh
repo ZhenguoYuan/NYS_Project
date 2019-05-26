@@ -1,6 +1,6 @@
 #!/bin/sh
 
-clusternum=10
+clusternum=3
 
 for((year=2002;year<=2016;year++))
 do
