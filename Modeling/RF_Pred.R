@@ -32,8 +32,13 @@ for (year in 2002 : 2007) {
   
   ## ---------- PARALLEL ---------- ##
   
-  this.doys <- split.doy(cluster.idx = as.numeric(Args[7]),
-                         cluster.num = as.numeric(Args[8]), 
+  # this.doys <- split.doy(cluster.idx = as.numeric(Args[7]),
+  #                        cluster.num = as.numeric(Args[8]), 
+  #                        year = year, start.date = 1, 
+  #                        end.date = numOfYear(as.numeric(year))) 
+  
+  this.doys <- split.doy(cluster.idx = 1,
+                         cluster.num = 1, 
                          year = year, start.date = 1, 
                          end.date = numOfYear(as.numeric(year))) 
   
