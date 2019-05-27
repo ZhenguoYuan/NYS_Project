@@ -54,17 +54,18 @@ for (year in 2002 : 2007) {
     
     ## ---------- Input ---------- ##
     # File paths
-    file.rf.aqua <- file.path(inpath.rf, 'aqua550', paste(year, sprintf('%03d', doy_tmp), '_RF.RData', sep = ''))
+    # file.rf.aqua <- file.path(inpath.rf, 'aqua550', paste(year, sprintf('%03d', doy_tmp), '_RF.RData', sep = ''))
     file.rf.terra <- file.path(inpath.rf, 'terra550', paste(year, sprintf('%03d', doy_tmp), '_RF.RData', sep = ''))
     file.cm <- file.path(inpath.cm, paste(year, sprintf('%03d', doy_tmp), '_combine.RData', sep = ''))
     
-    if (file.exists(file.rf.aqua) & file.exists(file.rf.terra) & file.exists(file.cm)) {
+    # if (file.exists(file.rf.aqua) & file.exists(file.rf.terra) & file.exists(file.cm)) {
+    if (file.exists(file.rf.terra) & file.exists(file.cm)) {
       
       # Gap-filled Aqua AOD
-      load(file.rf.aqua)
-      rf.result$Lat <- NULL
-      rf.result$Lon <- NULL
-      rf.result.aqua <- rf.result
+      # load(file.rf.aqua)
+      # rf.result$Lat <- NULL
+      # rf.result$Lon <- NULL
+      # rf.result.aqua <- rf.result
       # Gap-filled Terra AOD
       load(file.rf.terra)
       rf.result$Lat <- NULL
@@ -74,13 +75,14 @@ for (year in 2002 : 2007) {
       load(file.cm)
       
       # Combining RF and combine
-      RF_Pred_Raw <- merge(combine, rf.result.aqua, by = c('ID'), all = T)
-      RF_Pred_Raw <- merge(RF_Pred_Raw, rf.result.terra, by = c('ID'), all = T)
+      # RF_Pred_Raw <- merge(combine, rf.result.aqua, by = c('ID'), all = T)
+      RF_Pred_Raw <- merge(combine, rf.result.terra, by = c('ID'), all = T)
       
       ## ---------- Organizing ---------- ##
       RF_Pred_Raw <- DAT_ORG(RF_Pred_Raw, year)
       # Removing missing AOD
-      RF_Pred_Raw <- subset(RF_Pred_Raw, !is.na(AAOT550_New) & !is.na(TAOT550_New))
+      # RF_Pred_Raw <- subset(RF_Pred_Raw, !is.na(AAOT550_New) & !is.na(TAOT550_New))
+      RF_Pred_Raw <- subset(RF_Pred_Raw, !is.na(TAOT550_New))
       
       # Check if all AOD data are missing
       if (nrow(RF_Pred_Raw) != 0) { # Skipping if there is no data
