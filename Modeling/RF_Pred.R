@@ -19,9 +19,9 @@ source('src/rf_fun.R')
 
 library(foreach)
 library(doMC)
-registerDoMC(10)
+registerDoMC(3)
 
-foreach (year = 2004 : 2013) %dopar% {
+foreach (year = 2014 : 2016) %dopar% {
   
   numdays <- numOfYear(as.numeric(year))
   # Input paths
