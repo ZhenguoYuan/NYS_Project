@@ -24,7 +24,7 @@ source('src/rf_fun.R')
 # # Year
 # year <- Args[6] # 6th argument is the first custom argument
 
-for (year in 2008 : 2016) {
+for (year in 2014 : 2016) {
   
   numdays <- numOfYear(as.numeric(year))
   inpath.rf <- file.path('/home/jbi6/envi/NYS_Output/MAIAC_GRID_OUTPUT/RF', as.character(year))
