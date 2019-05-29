@@ -17,7 +17,11 @@ source('src/rf_fun.R')
 # # Parameters
 # year <- Args[6] # 6th argument is the first custom argument
 
-for (year in 2002 : 2007) {
+library(foreach)
+library(doMC)
+registerDoMC(10)
+
+foreach (year = 2004 : 2013) %dopar% {
   
   numdays <- numOfYear(as.numeric(year))
   # Input paths
