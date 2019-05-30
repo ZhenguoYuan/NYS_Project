@@ -164,8 +164,148 @@
 * Output: `/home/jbi6/terra/MAIAC_GRID_OUTPUT/Combine/yyyy/`
 * Run: `bash submit.sh`
 
+## AOD Gap-Filling
 ### MI
 * Conduct the multiple imputation
+### RF
+#### rf.R
+* Gap-filling AOD missing values by random forest
+* Input: `/home/jbi6/terra/MAIAC_GRID_OUTPUT/Combine`
+	* `YYYYDOY_combine.RData`
+* Output: `/home/jbi6/terra/MAIAC_GRID_OUTPUT/RF`
+	* aqua550 & terra550
+	* `YYYYDOY_RF.RData`
+	* `YYYYDOY_RF_MODELPERF.RData` (Model Performace: including rsq, mse, and variable importance measures)
+* Run: `bash submit.sh`
+
+#### push_time.sh
+* Automatic submitting a new year's RF Gap-filling when last year's modeling is done
+* Run: `bash push_time.sh` -> calling `submit_time.sh $year`
+
+#### rf_testing.R
+* Testing if the fitting ability of RF decreases as choosing less sample size, in order to choose a suitable sample size to speed up the RF fitting
+* The sample sizes tested are 10000, 30000, 50000, and 100000. The prediction results from these sample sizes will be compared to which with complete sample
+* Input: `/home/jbi6/terra/MAIAC_GRID_OUTPUT/Combine`
+	* `YYYYDOY_combine.RData`
+* Output: `/home/jbi6/terra/MAIAC_GRID_OUTPUT/RF_TEST`
+	* `DOY_SampleSize_TEST_RF.RData`
+	* Each output is a result predicted by a certain sample size
+* Run: `bash submit_test.sh`
+
+#### rf_testing_plot.R
+* To compare the prediction results from the fitting use different sample size (comparison standard is correlation r)
+* Input: 
+	* Cluster: `/home/jbi6/terra/MAIAC_GRID_OUTPUT/RF_TEST`
+		* `DOY_SampleSize_TEST_RF.RData`
+	* Local: `testdata/`
+		* `DOY_SampleSize_TEST_RF.RData`
+* Output
+	* correlation coefficients – R
+	* Scatter plots
+* Run: in local folder (not cluster), run `rf_testing_plot.R`
+
+## PM2.5 Modeling
+### Random Forest
+#### RF_Modeling.R
+* PM2.5 modeling using random forest
+* Input
+	* Gap-filled AOD: `/home/jbi6/terra/MAIAC_GRID_OUTPUT/RF/`
+	* Combined data: `/home/jbi6/terra/MAIAC_GRID_OUTPUT/Combine/`
+* Output
+	* Combining gap-filled AOD and other parameters
+		* `/home/jbi6/terra/MAIAC_GRID_OUTPUT/Modeling/PM25_FIT_RFMODEL/YYYY/`
+		* `YYYY_COMBINE_RF.RData`
+	* Random Forest model which will be used to predict PM2.5
+		* `/home/jbi6/terra/MAIAC_GRID_OUTPUT/Modeling/PM25_FIT_RFMODEL/YYYY/`
+		* `YYYY_RFMODEL_RF.RData`
+	* The fitting results and CV results of RF model
+		* `/home/jbi6/terra/MAIAC_GRID_OUTPUT/Modeling/PM25_FIT_RFMODEL/YYYY/`
+		* `YYYY_RFModel.txt`
+* Run: `bash submit_rf_model.sh` (Linux)
+
+#### RF_Pred.R
+* PM2.5 prediction using random forest
+* Input
+	* Gap-filled AOD: `/home/jbi6/terra/MAIAC_GRID_OUTPUT/RF/`
+	* Combined data: `/home/jbi6/terra/MAIAC_GRID_OUTPUT/Combine/`
+	* RF model
+		* `/home/jbi6/terra/MAIAC_GRID_OUTPUT/Modeling/PM25_FIT_RFMODEL/YYYY/`
+		* `YYYY_RFMODEL_RF.RData`
+* Output
+	* `/home/jbi6/terra/MAIAC_GRID_OUTPUT/Modeling/PM25_PRED_RFMODEL/YYYY/`
+* Run: `bash submit_rf_pred.sh` (Linux)
+
+## Validations
+### AERONET
+* Comparing gap-filled AOD (RF and MI) with AERONET AOD
+* Main: `Combine4AERO.R`
+	* Combining MI and RF daily results into single files with available AERONET AOD
+	* Input
+		* MI: `/home/jbi6/terra/MAIAC_GRID_OUTPUT/MI/`
+		* RF: `/home/jbi6/terra/MAIAC_GRID_OUTPUT/RF/`
+	* Output
+		* MI
+			* `/home/jbi6/terra/MAIAC_GRID_OUTPUT/Validations/AERONET/`
+			* `mi_combine_aero.RData`
+		* RF
+			* `/home/jbi6/terra/MAIAC_GRID_OUTPUT/Validations/AERONET/`
+			* `rf_combine_aero.RData`
+		* Run: `bash submit.sh` (Linux)
+
+### PLOT2D
+#### Combine4PLOT_AOD.R
+* Combining MI and RF daily results to annual AOD averages
+* Input
+	* MI: `/home/jbi6/terra/MAIAC_GRID_OUTPUT/MI/`
+	* RF: `/home/jbi6/terra/MAIAC_GRID_OUTPUT/RF/`
+* Output
+	* MI
+		* `/home/jbi6/terra/MAIAC_GRID_OUTPUT/Validations/PLOT2D/PLOTAOD/`
+		* `mi_combine_plot.RData`
+	* RF
+			* `/home/jbi6/terra/MAIAC_GRID_OUTPUT/Validations/PLOT2D/PLOTAOD/`
+			* `xaotddd_combine_[ccc].RData` (X is AOT type; DDD is wavelength; CCC is original or gap-filled)
+* Run: `bash submit_AOD.sh` (Linux)
+
+#### plot2daod.R
+* Plotting spatial distributions of overall, original, and gap-filled AOD; Do the summary statistics of original and gap-filled AOD
+* Input: `data/PLOTAOD/`
+	* `aaot550_combine.RData`
+	* `aaot550_combine_ori.RData`
+	* `aaot550_combine_gap.RData`
+	* `taot550_combine.RData`
+	* `taot550_combine_ori.RData`
+	* `taot550_combine_gap.RData`
+* Output: screen
+* Run: in local folder, run `plot2daod.R`
+
+#### Combine4PLOT_PM25.R
+* Combining daily PM2.5 predictions into an annual average and 4 seasons’ averages 
+* Input: `/home/jbi6/terra/MAIAC_GRID_OUTPUT/Modeling/PM25_PRED_RFMODEL/YYYY/`
+* Output
+	* `/home/jbi6/terra/MAIAC_GRID_OUTPUT/Validations/PLOT2D/PLOTPM25/YYYY/`
+		* `pm25_combine_plot.RData`
+		* `pm25_combine_plot_spring.RData`
+		* `pm25_combine_plot_summer.RData`
+		* `pm25_combine_plot_fall.RData`
+		* `pm25_combine_plot_winter.RData`
+* Run: `bash submit_PM25.sh` (Linux)
+
+#### plot2dpm25.R
+* Plotting spatial distributions of gap-filled AOD (RF and MI) and modeled PM2.5 
+* Input
+	* AOD (copy to local)
+		* `data/PLOTAOD/mi_combine_plot.RData`
+		* `data/PLOTAOD/rf_combine_plot.RData` 
+	* PM2.5 (copy to local)
+		* `data/PLOTPM25/pm25_combine_plot.RData`
+		* `data/PLOTPM25/pm25_combine_plot_spring.RData`
+		* `data/PLOTPM25/pm25_combine_plot_summer.RData`
+		* `data/PLOTPM25/pm25_combine_plot_fall.RData`
+		* `data/PLOTPM25/pm25_combine_plot_winter.RData`
+
+
+
 
 
 
@@ -179,5 +319,5 @@
 	
 > Written with [StackEdit](https://stackedit.io/).
 <!--stackedit_data:
-eyJoaXN0b3J5IjpbMjA1NzI1OTQ0Nl19
+eyJoaXN0b3J5IjpbMTYyMDczMjc4MCwyMDU3MjU5NDQ2XX0=
 -->
